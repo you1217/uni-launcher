@@ -13,6 +13,8 @@ import '../platform/ambient_light.dart';
 class LauncherController extends ChangeNotifier with WidgetsBindingObserver {
   final NativeGateway gateway;
   final native = ValueNotifier<Map<String, dynamic>>({});
+  final themeChanged = ValueNotifier<int>(0);
+  void notifyThemeChanged() => themeChanged.value++;
   Appearance appearance = const Appearance();
   AmbientLightSettings ambientLight = const AmbientLightSettings();
   Map<String, String> appNames = {};
@@ -142,6 +144,7 @@ class LauncherController extends ChangeNotifier with WidgetsBindingObserver {
           final data = jsonDecode(raw) as Map<String, dynamic>;
           appearance = Appearance.fromJson(
               Map<String, dynamic>.from(data['preferences'] ?? {}));
+          notifyThemeChanged();
           ambientLight = AmbientLightSettings.fromJson(
               Map<String, dynamic>.from(data['ambientLight'] ?? {}));
           appNames = _decodeAppNames(state['appNames'] ?? data['appNames']);
@@ -288,8 +291,10 @@ class LauncherController extends ChangeNotifier with WidgetsBindingObserver {
       message = state['message'];
       notifyListeners();
     }
-    if (overlayThemeChanged ||
-        (appearance.mode == 'system' && oldDark != state['dark']) ||
+    final themeNeedsUpdate = overlayThemeChanged ||
+        (appearance.mode == 'system' && oldDark != state['dark']);
+    if (themeNeedsUpdate) notifyThemeChanged();
+    if (themeNeedsUpdate ||
         oldDemo != state['demo'] ||
         oldHeight != state['viewportHeightPx'] ||
         oldEmbed != (state['navigation'] as Map?)?['canEmbed'])
@@ -402,7 +407,9 @@ class LauncherController extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   void setAppearance(Appearance next, {bool save = true}) {
+    if (appearance == next) return;
     appearance = next;
+    notifyThemeChanged();
     notifyListeners();
     if (save) persist();
   }
@@ -655,6 +662,7 @@ class LauncherController extends ChangeNotifier with WidgetsBindingObserver {
     native.value = {};
     _pageRequest++;
     _subscription?.cancel();
+    themeChanged.dispose();
     pageChanged.dispose();
     native.dispose();
     super.dispose();

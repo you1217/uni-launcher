@@ -8,7 +8,7 @@ class LauncherApp extends StatelessWidget {
   const LauncherApp({super.key, required this.controller});
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-      animation: controller,
+      animation: controller.themeChanged,
       builder: (context, _) {
         final style = SurfaceStyle.from(
             controller.appearance, controller.native.value['dark'] == true,

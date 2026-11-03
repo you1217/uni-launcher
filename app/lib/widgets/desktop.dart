@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:math' as math;
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import '../controller/launcher_controller.dart';
 import '../theme/launcher_theme.dart';
 import '../theme/design_tokens.dart';
@@ -243,7 +240,7 @@ class _DesktopState extends State<Desktop> with _DesktopDrag {
           },
           items = c.cards
               .map((card) =>
-                  card.id == c.placementOrigin?.id && !c.placementResizing
+                  card.id == c.placementOrigin?.id
                       ? card
                       : preview[card.id] ?? card)
               .where((card) => card.page == page)
@@ -299,7 +296,35 @@ class _DesktopState extends State<Desktop> with _DesktopDrag {
                                       ? SurfaceStyle.of(context).accent
                                       : Theme.of(context)
                                           .colorScheme
-                                          .error))))),
+                                          .error)),
+                          child: c.placementResizing
+                              ? Center(
+                                  child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: Design.px(12),
+                                          vertical: Design.px(6)),
+                                      decoration: BoxDecoration(
+                                          color: (c.placementValid
+                                                  ? SurfaceStyle.of(context)
+                                                      .accent
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .error)
+                                              .withValues(alpha: .2),
+                                          borderRadius: BorderRadius.circular(
+                                              Design.px(8))),
+                                      child: Text(
+                                          '${target.w} × ${target.h}',
+                                          style: TextStyle(
+                                              fontSize: Design.px(18),
+                                              fontWeight: FontWeight.w600,
+                                              color: c.placementValid
+                                                  ? SurfaceStyle.of(context)
+                                                      .accent
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .error))))
+                              : null))),
             for (final card in items)
               AnimatedPositioned(
                   key: ValueKey('position-${card.id}'),
@@ -315,7 +340,7 @@ class _DesktopState extends State<Desktop> with _DesktopDrag {
                   width: card.w * unitX - gap,
                   height: card.h * unitY - gap,
                   child: Opacity(
-                      opacity: card.id == _feedbackId ? 0 : 1,
+                      opacity: card.id == _feedbackId ? 0.35 : 1,
                       child: RepaintBoundary(
                           key: _cardBoundaries.putIfAbsent(
                               card.id,

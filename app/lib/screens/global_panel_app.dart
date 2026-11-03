@@ -113,7 +113,7 @@ class _GlobalPanelAppState extends State<GlobalPanelApp> {
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-      animation: widget.controller,
+      animation: widget.controller.themeChanged,
       builder: (context, _) => DockWindowScope(
           expand: (_) async {},
           onPresented: () =>

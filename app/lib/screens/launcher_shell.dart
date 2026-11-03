@@ -25,6 +25,7 @@ class _LauncherShellState extends State<LauncherShell> {
   @override
   void initState() {
     super.initState();
+    widget.controller.addListener(_onControllerChanged);
     if (widget.controller.gateway is AndroidGateway) {
       update.onAvailable = () {
         if (mounted) showUpdateDialog(context, update);
@@ -45,8 +46,13 @@ class _LauncherShellState extends State<LauncherShell> {
         .catchError((Object _) {});
   }
 
+  void _onControllerChanged() {
+    if (mounted) setState(() {});
+  }
+
   @override
   void dispose() {
+    widget.controller.removeListener(_onControllerChanged);
     update.dispose();
     pagePosition.dispose();
     super.dispose();

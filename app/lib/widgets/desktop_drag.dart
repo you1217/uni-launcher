@@ -23,8 +23,7 @@ mixin _DesktopDrag on State<Desktop> {
   LauncherCard? _pendingTarget;
   Timer? _hoverTimer, _edgeTimer, _settleTimer;
   String? _feedbackId;
-  ui.Image? _feedbackImage;
-  int _imageGeneration = 0, _edgeDirection = 0;
+  int _edgeDirection = 0;
   bool _settling = false;
   LauncherController get _controller => widget.controller;
 
@@ -94,7 +93,6 @@ mixin _DesktopDrag on State<Desktop> {
     if (!resize) {
       _feedbackId = card.id;
       _feedbackBounds.value = _cardRect(g, card);
-      unawaited(_captureCard(card.id, ++_imageGeneration));
     }
     if (!_controller.beginPlacement(card.id, resizing: resize)) {
       _gesture = null;
@@ -102,21 +100,6 @@ mixin _DesktopDrag on State<Desktop> {
       return;
     }
     _moveGesture(_pointers[pointer]!);
-  }
-
-  Future<void> _captureCard(String id, int generation) async {
-    final render = _cardBoundaries[id]?.currentContext?.findRenderObject();
-    if (render is! RenderRepaintBoundary || render.debugNeedsPaint) return;
-    try {
-      final area = render.size.width * render.size.height;
-      final image = await render.toImage(
-          pixelRatio: math.min(1, math.sqrt(1500000 / math.max(1, area))));
-      if (!mounted || generation != _imageGeneration || _feedbackId != id) {
-        image.dispose();
-        return;
-      }
-      setState(() => _feedbackImage = image);
-    } catch (_) {/* A lightweight title preview remains available. */}
   }
 
   void _moveGesture(Offset position) {
@@ -150,7 +133,7 @@ mixin _DesktopDrag on State<Desktop> {
     } else {
       final occupied =
           _controller.cards.any((c) => c.id != target.id && c.overlaps(target));
-      _hoverTimer = Timer(Duration(milliseconds: occupied ? 150 : 0), () {
+      _hoverTimer = Timer(Duration(milliseconds: occupied ? 120 : 0), () {
         if (_gesture == g) _controller.previewPlacement(target);
       });
     }
@@ -211,14 +194,9 @@ mixin _DesktopDrag on State<Desktop> {
 
   void _clearFeedback() {
     _settleTimer?.cancel();
-    _imageGeneration++;
-    final image = _feedbackImage;
-    _feedbackImage = null;
     _feedbackId = null;
     _settling = false;
     _feedbackBounds.value = null;
-    if (image != null)
-      WidgetsBinding.instance.addPostFrameCallback((_) => image.dispose());
     if (mounted) setState(() {});
   }
 
@@ -258,32 +236,42 @@ mixin _DesktopDrag on State<Desktop> {
                             ]),
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(s.radius),
-                            child: _feedbackImage != null
-                                ? ColoredBox(
-                                    // 快照是半透明的，必须垫一层不透明底，
-                                    // 否则浮起来的卡片会透出下面的卡片。
-                                    color: s.snapshotBase,
-                                    child: RawImage(
-                                        image: _feedbackImage,
-                                        // 浮层放大了 2.5%，默认低质量采样会把
-                                        // 文字拖出一圈灰边。
-                                        filterQuality: FilterQuality.medium,
-                                        fit: BoxFit.fill))
-                                : GlassSurface(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Center(
-                                        child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                          UniIcon(
-                                              cardSymbol(card?.type ?? 'apps'),
-                                              size: 42,
-                                              color: s.accent),
-                                          const SizedBox(height: 12),
-                                          Text(card?.title ?? '移动卡片',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis),
-                                        ]))))))));
+                            child: GlassSurface(
+                                padding: const EdgeInsets.all(20),
+                                borderColor: s.accent.withValues(alpha: .6),
+                                child: Center(
+                                    child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                      UniIcon(
+                                          cardSymbol(card?.type ?? 'apps'),
+                                          size: 42,
+                                          color: s.accent),
+                                      const SizedBox(height: 12),
+                                      Text(card?.title ?? '移动卡片',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: s.text)),
+                                      const SizedBox(height: 6),
+                                      Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 2),
+                                          decoration: BoxDecoration(
+                                              color: s.accent
+                                                  .withValues(alpha: .15),
+                                              borderRadius:
+                                                  BorderRadius.circular(6)),
+                                          child: Text(
+                                              '${card?.w ?? 0} × ${card?.h ?? 0}',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: s.accent,
+                                                  fontWeight:
+                                                      FontWeight.w500))),
+                                    ]))))))));
       });
 
   @override
@@ -292,8 +280,6 @@ mixin _DesktopDrag on State<Desktop> {
     _hoverTimer?.cancel();
     _edgeTimer?.cancel();
     _settleTimer?.cancel();
-    _imageGeneration++;
-    _feedbackImage?.dispose();
     _feedbackBounds.dispose();
     super.dispose();
   }

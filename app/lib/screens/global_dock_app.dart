@@ -12,7 +12,7 @@ class GlobalDockApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: controller,
+        animation: controller.themeChanged,
         builder: (context, _) {
           final dark = controller.native.value['dark'] == true;
           final style = SurfaceStyle.from(controller.appearance, dark,
