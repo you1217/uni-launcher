@@ -54,7 +54,8 @@ class _EditableCardState extends State<EditableCard> {
         onLongPressStart: (d) => start(false, d.globalPosition),
         child: GlassSurface(
             padding: EdgeInsets.zero,
-            glow: s.cardGlow(card.type),
+            glow: c.editing ? null : s.cardGlow(card.type),
+            shadow: !c.editing,
             borderColor: c.editing ? s.accent : null,
             child: Stack(children: [
               Positioned.fill(
