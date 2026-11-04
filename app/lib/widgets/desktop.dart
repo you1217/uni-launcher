@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../controller/launcher_controller.dart';
 import '../theme/launcher_theme.dart';
@@ -365,6 +366,26 @@ class _DesktopState extends State<Desktop> with _DesktopDrag {
   }
 }
 
+class ImmediateHorizontalDragGestureRecognizer
+    extends HorizontalDragGestureRecognizer {
+  final double slop;
+
+  ImmediateHorizontalDragGestureRecognizer({
+    required this.slop,
+  }) {
+    dragStartBehavior = DragStartBehavior.down;
+    gestureSettings = DeviceGestureSettings(touchSlop: slop);
+  }
+
+  @override
+  bool hasSufficientGlobalDistanceToAccept(
+    PointerDeviceKind pointerDeviceKind,
+    double? deviceTouchSlop,
+  ) {
+    return globalDistanceMoved.abs() > slop;
+  }
+}
+
 class _DesktopStaticLayers extends StatelessWidget {
   final LauncherController controller;
   final List<Widget> grids;
@@ -380,23 +401,46 @@ class _DesktopStaticLayers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = controller;
+    final slop = Design.px(4);
     return BackdropGroup(
-        child: GestureDetector(
+        child: RawGestureDetector(
             key: const ValueKey('card-grid'),
             behavior: HitTestBehavior.translucent,
-            onLongPress: c.editing ? null : c.beginEdit,
-            onHorizontalDragStart: (_) {
-              if (!c.placing) pagerKey.currentState?.dragStart();
+            gestures: <Type, GestureRecognizerFactory>{
+              ImmediateHorizontalDragGestureRecognizer:
+                  GestureRecognizerFactoryWithHandlers<
+                      ImmediateHorizontalDragGestureRecognizer>(
+                () => ImmediateHorizontalDragGestureRecognizer(slop: slop),
+                (ImmediateHorizontalDragGestureRecognizer instance) {
+                  instance
+                    ..onStart = (_) {
+                      if (!c.placing) pagerKey.currentState?.dragStart();
+                    }
+                    ..onUpdate = (d) {
+                      if (!c.placing) {
+                        pagerKey.currentState
+                            ?.dragUpdate(d.primaryDelta ?? 0);
+                      }
+                    }
+                    ..onEnd = (d) {
+                      if (!c.placing) {
+                        pagerKey.currentState
+                            ?.dragEnd(d.primaryVelocity ?? 0);
+                      }
+                    }
+                    ..onCancel = () => pagerKey.currentState?.dragCancel();
+                },
+              ),
+              if (!c.editing)
+                LongPressGestureRecognizer:
+                    GestureRecognizerFactoryWithHandlers<
+                        LongPressGestureRecognizer>(
+                  () => LongPressGestureRecognizer(),
+                  (LongPressGestureRecognizer instance) {
+                    instance.onLongPress = c.beginEdit;
+                  },
+                ),
             },
-            onHorizontalDragUpdate: (d) {
-              if (!c.placing)
-                pagerKey.currentState?.dragUpdate(d.primaryDelta ?? 0);
-            },
-            onHorizontalDragEnd: (d) {
-              if (!c.placing)
-                pagerKey.currentState?.dragEnd(d.primaryVelocity ?? 0);
-            },
-            onHorizontalDragCancel: () => pagerKey.currentState?.dragCancel(),
             child: Padding(
                 padding:
                     EdgeInsets.fromLTRB(0, Design.px(16), 0, Design.px(24)),

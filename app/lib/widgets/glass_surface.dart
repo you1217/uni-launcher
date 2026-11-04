@@ -4,6 +4,7 @@ import '../theme/launcher_theme.dart';
 import '../theme/design_tokens.dart';
 import '../theme/technical_frame.dart';
 import 'uni_icon.dart';
+import 'page_transition.dart';
 
 enum SurfaceTone { normal, strong, soft }
 
@@ -52,7 +53,10 @@ class GlassSurface extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = SurfaceStyle.of(context),
         shape = BorderRadius.circular(radius ?? s.radius);
-    if (s.nocturne) return _nocturne(s, shape);
+    final isMoving = DesktopMotionScope.movingOf(context);
+    final activeShadow = shadow && !isMoving;
+    final activeBlur = s.liveBlur && !isMoving;
+    if (s.nocturne) return _nocturne(s, shape, activeShadow: activeShadow);
     final color = dock && s.technicalFrame
         ? s.dock
         : switch (tone) {
@@ -103,7 +107,7 @@ class GlassSurface extends StatelessWidget {
             // A wide Gaussian is the single most expensive thing a card puts on
             // the raster pass here (Adreno 530 measured ~5-7ms per page). The
             // softer look is preserved at a third of the blur area.
-            boxShadow: shadow
+            boxShadow: activeShadow
                 ? [
                     BoxShadow(
                         color: s.shadow,
@@ -113,7 +117,7 @@ class GlassSurface extends StatelessWidget {
                 : null),
         child: ClipRRect(
             borderRadius: shape,
-            child: s.liveBlur
+            child: activeBlur
                 ? BackdropFilter.grouped(
                     key: const ValueKey('glass-filter'),
                     filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -124,7 +128,8 @@ class GlassSurface extends StatelessWidget {
   /// Nocturne surface: a hairline white-alpha gradient over the near-black
   /// canvas, an optional bottom glow, and no blur at all (the design is built
   /// for the 820A GPU — no backdrop-filter, no floating lights).
-  Widget _nocturne(SurfaceStyle s, BorderRadius shape) {
+  Widget _nocturne(SurfaceStyle s, BorderRadius shape,
+      {bool activeShadow = true}) {
     if (flat) {
       // 底栏音乐块：只给一层平整的淡底和细边，不叠玻璃高光与底部压暗
       // （那两样铺在 72 高的胶囊里会糊成一块黑）。底色是必须的——没有它，
@@ -165,7 +170,7 @@ class GlassSurface extends StatelessWidget {
     return DecoratedBox(
         decoration: BoxDecoration(
             borderRadius: shape,
-            boxShadow: shadow
+            boxShadow: activeShadow
                 ? [
                     // 0 26px 54px -26px rgba(0,0,0,.9) on the design board.
                     const BoxShadow(
