@@ -225,6 +225,49 @@ void main() {
     await gesture.up();
     await t.pumpAndSettle();
     expect((c.cards.single.w, c.cards.single.h), (8, 3));
+
+    // Consecutive resize on newly added card (enlarge then shrink)
+    c.add('shortcuts');
+    await t.pumpAndSettle();
+    final newCard = c.cards.firstWhere((x) => x.type == 'shortcuts');
+    final resizeKey = ValueKey('resize-${newCard.id}');
+    expect(find.byKey(resizeKey), findsOneWidget);
+
+    // Dwell for 600ms (exceeding 500ms LongPress timeout) before moving to ensure
+    // outer long-press drag does not preempt the corner resize on in-car touchscreens.
+    final gDwell = await t.startGesture(t.getCenter(find.byKey(resizeKey)));
+    await t.pump(const Duration(milliseconds: 600));
+    expect(c.placing, isFalse);
+    await gDwell.moveBy(Offset((grid.width + 20) / 12 * 2, (grid.height + 20) / 6));
+    await t.pump();
+    expect(c.placementResizing, isTrue);
+    await gDwell.up();
+    await t.pumpAndSettle();
+    expect((c.cards.firstWhere((x) => x.id == newCard.id).w,
+            c.cards.firstWhere((x) => x.id == newCard.id).h),
+        (4, 3));
+
+    // Second resize attempt immediately on the same card
+    final g2 = await t.startGesture(t.getCenter(find.byKey(resizeKey)));
+    await g2.moveBy(Offset((grid.width + 20) / 12 * 2, (grid.height + 20) / 6));
+    await t.pump();
+    expect(c.placementResizing, isTrue);
+    await g2.up();
+    await t.pumpAndSettle();
+    expect((c.cards.firstWhere((x) => x.id == newCard.id).w,
+            c.cards.firstWhere((x) => x.id == newCard.id).h),
+        (4, 4));
+
+    // Third resize attempt: shrink card back
+    final g3 = await t.startGesture(t.getCenter(find.byKey(resizeKey)));
+    await g3.moveBy(Offset(-(grid.width + 20) / 12 * 2, -(grid.height + 20) / 6));
+    await t.pump();
+    expect(c.placementResizing, isTrue);
+    await g3.up();
+    await t.pumpAndSettle();
+    expect((c.cards.firstWhere((x) => x.id == newCard.id).w,
+            c.cards.firstWhere((x) => x.id == newCard.id).h),
+        (3, 3));
     expect(t.takeException(), isNull);
     await t.pumpWidget(const SizedBox());
     c.dispose();

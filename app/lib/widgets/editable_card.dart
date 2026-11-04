@@ -51,7 +51,8 @@ class _EditableCardState extends State<EditableCard> {
         s = SurfaceStyle.of(context),
         card = widget.card;
     return GestureDetector(
-        onLongPressStart: (d) => start(false, d.globalPosition),
+        onLongPressStart:
+            c.editing ? null : (d) => start(false, d.globalPosition),
         child: GlassSurface(
             padding: EdgeInsets.zero,
             glow: c.editing ? null : s.cardGlow(card.type),
