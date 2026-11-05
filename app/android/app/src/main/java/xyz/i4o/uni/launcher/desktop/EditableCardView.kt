@@ -2,11 +2,7 @@ package xyz.i4o.uni.launcher.desktop
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Outline
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.MotionEvent
@@ -15,10 +11,16 @@ import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import xyz.i4o.uni.launcher.R
 
 /**
- * Base card container with dark-glass styling, hardware outline clipping,
- * and immediate touch-responsive corner resize handle.
+ * 1:1 Nocturne-styled glass card container for UNI Launcher.
+ *
+ * Features:
+ * - 24dp rounded corners clipped directly via hardware RenderNode
+ * - Dark-glass base with delicate 1dp edge highlight (#26FFFFFF)
+ * - Card-type-specific bottom ambient glow (RadialGradient)
+ * - Anti-intercept resize handle with 48dp touch hot-zone
  */
 class EditableCardView @JvmOverloads constructor(
     context: Context,
@@ -29,6 +31,7 @@ class EditableCardView @JvmOverloads constructor(
     var card: LauncherCard = LauncherCard(id = "default")
         set(value) {
             field = value
+            updateGlowColor()
             updateLayoutParamsFromCard()
         }
 
@@ -36,13 +39,24 @@ class EditableCardView @JvmOverloads constructor(
 
     val contentView: FrameLayout
     private val resizeHandle: ImageView
+
     private val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = dpToPx(1f).toFloat()
-        color = Color.parseColor("#33FFFFFF")
+        color = Color.parseColor("#26FFFFFF")
     }
 
-    private val cornerRadius = dpToPx(16f).toFloat()
+    private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = Color.parseColor("#E00C111C") // High-contrast Nocturne base
+    }
+
+    private val glowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+
+    private var glowColor: Int = Color.parseColor("#383BE2C0")
+    private val cornerRadius = dpToPx(24f).toFloat()
     private val handleTouchSize = dpToPx(48f)
 
     private var isResizing = false
@@ -52,23 +66,21 @@ class EditableCardView @JvmOverloads constructor(
     private var startRowSpan = 2
 
     init {
-        // Hardware accelerated outline clipping
+        // GPU outline clipping
         clipToOutline = true
         outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View, outline: Outline) {
                 outline.setRoundRect(0, 0, view.width, view.height, cornerRadius)
             }
         }
-        setBackgroundColor(Color.parseColor("#2E121724")) // Dark glass base
 
-        // Card content container
+        // Inner content frame
         contentView = FrameLayout(context)
         addView(contentView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
 
         // Resize handle at bottom-right corner
         resizeHandle = ImageView(context).apply {
-            setImageResource(android.R.drawable.ic_menu_crop) // System icon fallback or custom drawable
-            setColorFilter(Color.parseColor("#80FFFFFF"))
+            setImageResource(R.drawable.ic_resize_handle)
             val iconSize = dpToPx(20f)
             val lp = LayoutParams(iconSize, iconSize).apply {
                 gravity = Gravity.BOTTOM or Gravity.END
@@ -82,20 +94,53 @@ class EditableCardView @JvmOverloads constructor(
         setWillNotDraw(false)
     }
 
+    private fun updateGlowColor() {
+        glowColor = when (card.type) {
+            "vehicle" -> Color.parseColor("#38FFB057") // Warm Amber
+            "media" -> Color.parseColor("#36FF5FA8")   // Nocturne Pink
+            "traffic" -> Color.parseColor("#363BE2C0") // Mint Green
+            "apps", "apps_full" -> Color.parseColor("#308E6CFF") // Violet
+            else -> Color.parseColor("#283BE2C0")
+        }
+        invalidate()
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0) {
+            val radius = h.toFloat() * 0.85f
+            glowPaint.shader = RadialGradient(
+                w / 2f,
+                h.toFloat() + radius * 0.15f,
+                radius,
+                glowColor,
+                Color.TRANSPARENT,
+                Shader.TileMode.CLAMP
+            )
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
+        val w = width.toFloat()
+        val h = height.toFloat()
+
+        // 1. Dark glass base
+        canvas.drawRect(0f, 0f, w, h, bgPaint)
+
+        // 2. Nocturne Ambient Bottom Glow
+        canvas.drawRect(0f, 0f, w, h, glowPaint)
+
         super.onDraw(canvas)
-        // Subtle outline border
-        val strokeOffset = borderPaint.strokeWidth / 2f
-        val rect = RectF(
-            strokeOffset,
-            strokeOffset,
-            width - strokeOffset,
-            height - strokeOffset
-        )
+
+        // 3. Delicate 1dp border
+        val offset = borderPaint.strokeWidth / 2f
+        val rect = RectF(offset, offset, w - offset, h - offset)
         if (isResizing) {
-            borderPaint.color = Color.parseColor("#8064B5F6") // Soft blue accent while resizing
+            borderPaint.color = Color.parseColor("#9964B5F6")
+            borderPaint.strokeWidth = dpToPx(1.5f).toFloat()
         } else {
-            borderPaint.color = Color.parseColor("#2BFFFFFF")
+            borderPaint.color = Color.parseColor("#26FFFFFF")
+            borderPaint.strokeWidth = dpToPx(1f).toFloat()
         }
         canvas.drawRoundRect(rect, cornerRadius, cornerRadius, borderPaint)
     }
@@ -183,4 +228,3 @@ class EditableCardView @JvmOverloads constructor(
         return (dp * density + 0.5f).toInt()
     }
 }
-

@@ -10,9 +10,10 @@ import android.widget.TextView
 import org.json.JSONArray
 import org.json.JSONObject
 import xyz.i4o.uni.launcher.LauncherRuntime
+import xyz.i4o.uni.launcher.R
 
 /**
- * Traffic light card displaying real-time Amap navigation traffic light countdowns.
+ * 1:1 Visual reproduction of UNI Launcher's Amap Traffic Light Card.
  */
 class TrafficLightCardView @JvmOverloads constructor(
     context: Context,
@@ -20,10 +21,10 @@ class TrafficLightCardView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private val titleView: TextView
-    private val statusView: TextView
+    private val titleBadge: TextView
     private val countdownView: TextView
-    private val subTextView: TextView
+    private val laneStatusPill: TextView
+    private val hintView: TextView
 
     init {
         orientation = VERTICAL
@@ -31,39 +32,49 @@ class TrafficLightCardView @JvmOverloads constructor(
         setPadding(pad, pad, pad, pad)
         gravity = Gravity.CENTER
 
-        titleView = TextView(context).apply {
-            text = "高德红绿灯倒计时"
-            setTextColor(Color.parseColor("#99FFFFFF"))
-            textSize = 13f
+        // Header: Badge
+        titleBadge = TextView(context).apply {
+            text = "高德红绿灯"
+            setTextColor(Color.parseColor("#3BE2C0")) // Mint
+            textSize = 12f
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_pill_badge)
+            setPadding(dpToPx(10f), dpToPx(3f), dpToPx(10f), dpToPx(3f))
         }
-        addView(titleView)
+        addView(titleBadge)
 
+        // Large countdown numbers
         countdownView = TextView(context).apply {
             text = "--"
             setTextColor(Color.WHITE)
-            textSize = 38f
+            textSize = 46f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setPadding(0, dpToPx(4f), 0, dpToPx(4f))
+            setPadding(0, dpToPx(2f), 0, dpToPx(2f))
         }
         addView(countdownView)
 
-        statusView = TextView(context).apply {
-            text = "高德导航未开启或无路口数据"
-            setTextColor(Color.parseColor("#80FFFFFF"))
-            textSize = 13f
+        // Status pill badge
+        laneStatusPill = TextView(context).apply {
+            text = "等待路口数据"
+            setTextColor(Color.parseColor("#B3FFFFFF"))
+            textSize = 12f
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_pill_badge)
+            setPadding(dpToPx(12f), dpToPx(4f), dpToPx(12f), dpToPx(4f))
             gravity = Gravity.CENTER
         }
-        addView(statusView)
+        addView(laneStatusPill)
 
-        subTextView = TextView(context).apply {
+        // Bottom hint
+        hintView = TextView(context).apply {
             text = "点击启动高德地图"
-            setTextColor(Color.parseColor("#64B5F6"))
-            textSize = 12f
+            setTextColor(Color.parseColor("#66FFFFFF"))
+            textSize = 11f
             gravity = Gravity.CENTER
             setPadding(0, dpToPx(6f), 0, 0)
         }
-        addView(subTextView)
+        addView(hintView)
 
         setOnClickListener {
             try {
@@ -87,31 +98,31 @@ class TrafficLightCardView @JvmOverloads constructor(
                 countdownView.text = "${sec}s"
                 when (status?.lowercase()) {
                     "green" -> {
-                        countdownView.setTextColor(Color.parseColor("#4CAF50"))
-                        statusView.text = "绿灯通行中"
-                        statusView.setTextColor(Color.parseColor("#81C784"))
+                        countdownView.setTextColor(Color.parseColor("#3BE2C0")) // Mint
+                        laneStatusPill.text = "🟢 前方路口通行"
+                        laneStatusPill.setTextColor(Color.parseColor("#3BE2C0"))
                     }
                     "red" -> {
-                        countdownView.setTextColor(Color.parseColor("#F44336"))
-                        statusView.text = "红灯等待"
-                        statusView.setTextColor(Color.parseColor("#E57373"))
+                        countdownView.setTextColor(Color.parseColor("#FF5252")) // Red
+                        laneStatusPill.text = "🔴 红灯等待中"
+                        laneStatusPill.setTextColor(Color.parseColor("#FF8A80"))
                     }
                     else -> {
-                        countdownView.setTextColor(Color.parseColor("#FFEB3B"))
-                        statusView.text = "黄灯注意"
-                        statusView.setTextColor(Color.parseColor("#FFF176"))
+                        countdownView.setTextColor(Color.parseColor("#FFD54F")) // Yellow
+                        laneStatusPill.text = "🟡 黄灯注意缓行"
+                        laneStatusPill.setTextColor(Color.parseColor("#FFE082"))
                     }
                 }
-                subTextView.text = "前方路口实时状态"
+                hintView.text = "高德车机版实时绿波"
                 return
             }
         }
 
         countdownView.text = "--"
         countdownView.setTextColor(Color.WHITE)
-        statusView.text = "暂无前方红绿灯"
-        statusView.setTextColor(Color.parseColor("#80FFFFFF"))
-        subTextView.text = "点击启动高德地图"
+        laneStatusPill.text = "等待路口数据"
+        laneStatusPill.setTextColor(Color.parseColor("#B3FFFFFF"))
+        hintView.text = "点击启动高德地图"
     }
 
     private fun dpToPx(dp: Float): Int {
@@ -119,4 +130,3 @@ class TrafficLightCardView @JvmOverloads constructor(
         return (dp * density + 0.5f).toInt()
     }
 }
-

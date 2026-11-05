@@ -10,11 +10,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.json.JSONArray
-import org.json.JSONObject
 import xyz.i4o.uni.launcher.LauncherRuntime
+import xyz.i4o.uni.launcher.R
 
 /**
- * App grid card displaying installed applications with instant launch capability.
+ * 1:1 Visual reproduction of UNI Launcher's Fast App Grid Card.
  */
 class AppGridCardView @JvmOverloads constructor(
     context: Context,
@@ -35,7 +35,7 @@ class AppGridCardView @JvmOverloads constructor(
             setTextColor(Color.WHITE)
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
-            setPadding(0, 0, 0, dpToPx(10f))
+            setPadding(0, 0, 0, dpToPx(8f))
         }
         addView(titleView)
 
@@ -51,14 +51,14 @@ class AppGridCardView @JvmOverloads constructor(
 
     private fun populateDefaultApps() {
         val defaultApps = listOf(
-            Triple("高德地图", "com.autonavi.amapauto", android.R.drawable.ic_dialog_map),
-            Triple("音乐播放", "ecarx.xsf.mediacenter", android.R.drawable.ic_media_play),
-            Triple("全景影像", "official_camera", android.R.drawable.ic_menu_camera),
-            Triple("车辆设置", "com.ecarx.carsettings", android.R.drawable.ic_menu_preferences),
-            Triple("应用中心", "official_market", android.R.drawable.ic_menu_agenda),
-            Triple("系统设置", "com.android.settings", android.R.drawable.ic_menu_manage),
-            Triple("文件管理", "com.android.documentsui", android.R.drawable.ic_menu_save),
-            Triple("桌面设置", "xyz.i4o.uni.launcher.DesktopSettings", android.R.drawable.ic_menu_info_details)
+            Triple("高德地图", "com.autonavi.amapauto", R.drawable.ic_dock_nav),
+            Triple("音乐播放", "ecarx.xsf.mediacenter", R.drawable.ic_dock_music),
+            Triple("全景影像", "official_camera", R.drawable.ic_dock_camera),
+            Triple("车辆设置", "com.ecarx.carsettings", R.drawable.ic_dock_car),
+            Triple("应用中心", "official_market", R.drawable.ic_dock_apps),
+            Triple("系统设置", "com.android.settings", R.drawable.ic_dock_settings),
+            Triple("文件管理", "com.android.documentsui", R.drawable.ic_dock_apps),
+            Triple("桌面设置", "xyz.i4o.uni.launcher.DesktopSettings", R.drawable.ic_dock_settings)
         )
 
         gridLayout.removeAllViews()
@@ -67,12 +67,11 @@ class AppGridCardView @JvmOverloads constructor(
                 orientation = VERTICAL
                 gravity = Gravity.CENTER
                 setPadding(dpToPx(4f), dpToPx(6f), dpToPx(4f), dpToPx(6f))
-                setBackgroundColor(Color.parseColor("#12FFFFFF"))
+                setBackgroundResource(R.drawable.bg_pill_badge)
 
                 val icon = ImageView(context).apply {
                     setImageResource(iconRes)
-                    setColorFilter(Color.WHITE)
-                    val iconSize = dpToPx(28f)
+                    val iconSize = dpToPx(24f)
                     layoutParams = LayoutParams(iconSize, iconSize)
                 }
                 val name = TextView(context).apply {
@@ -119,7 +118,7 @@ class AppGridCardView @JvmOverloads constructor(
     }
 
     fun updateApps(apps: JSONArray) {
-        // Can be dynamically customized from user settings
+        // Dynamic app customization
     }
 
     private fun dpToPx(dp: Float): Int {
@@ -127,4 +126,3 @@ class AppGridCardView @JvmOverloads constructor(
         return (dp * density + 0.5f).toInt()
     }
 }
-
