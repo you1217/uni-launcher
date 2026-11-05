@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/launch_background"
+    android:clipToPadding="false"
+    android:clipChildren="false">
+
+    <!-- Top Status Bar -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:background="#1F000000">
+
+        <!-- Time & Date -->
+        <TextClock
+            android:id="@+id/clockTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="HH:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextClock
+            android:id="@+id/clockDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:format12Hour="M月d日 E"
+            android:format24Hour="M月d日 E"
+            android:textColor="#B3FFFFFF"
+            android:textSize="14sp" />
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- Weather Status -->
+        <TextView
+            android:id="@+id/topWeatherText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="晴 21°C"
+            android:textColor="#E6FFFFFF"
+            android:textSize="14sp"
+            android:layout_marginEnd="20dp" />
+
+        <!-- Status Icons / Connection info -->
+        <TextView
+            android:id="@+id/topSystemStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4G | 蓝牙已连接"
+            android:textColor="#80FFFFFF"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- Workspace ViewPager2 -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/workspaceViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:overScrollMode="never" />
+
+    <!-- Bottom Dock Bar -->
+    <FrameLayout
+        android:id="@+id/dockContainer"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp">
+
+        <LinearLayout
+            android:id="@+id/dockBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#33141824">
+
+            <!-- Dock items -->
+            <TextView
+                android:id="@+id/dockNavBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="导航"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <TextView
+                android:id="@+id/dockMusicBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="音乐"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <TextView
+                android:id="@+id/dockCameraBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="360全景"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <TextView
+                android:id="@+id/dockCarSettingsBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="车辆设置"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <TextView
+                android:id="@+id/dockAppsBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="全部应用"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <TextView
+                android:id="@+id/dockSettingsBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="桌面设置"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
+

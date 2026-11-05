@@ -1,19 +1,18 @@
 plugins {
     id("com.android.application")
-    id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
     namespace = "xyz.i4o.uni.launcher"
-    compileSdk = flutter.compileSdkVersion
-    buildFeatures { buildConfig = true }
+    compileSdk = 36
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+    }
 
-    // Compress native libraries in APKs. Android extracts them at install
-    // time; this reduces transfer size at the expense of installed disk usage.
     packaging {
         jniLibs { useLegacyPackaging = true }
     }
-
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -23,64 +22,54 @@ android {
     defaultConfig {
         applicationId = "xyz.i4o.uni.launcher"
         minSdk = 24
-        // Dedicated Android 9 head unit, distributed locally rather than through Play.
         targetSdk = 28
-        // Uses the version code from pubspec.yaml. When using split APKs, 1000 * ABI_VERSION
-        // is added automatically by Flutter. (https://developer.android.com/studio/build/configure-apk-splits#configure-APK-versions)
-        // You can force using the value of versionCode by specifying the `-P force-version-code-ignoring-abi=true`
-        // flag during build.
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = 55
+        versionName = "0.8.0-native"
     }
 
     lint {
-        // Keep release lint enabled; the Play target API deadline does not apply here.
         disable += "ExpiredTargetSdkVersion"
     }
 
     sourceSets.getByName("main") {
-        java.srcDirs("src/main/java/xyz/i4o/uni/launcher/integration", "src/main/java/xyz/i4o/uni/launcher/core")
+        java.srcDirs("src/main/java")
         assets.srcDir(layout.buildDirectory.dir("generated/officialCatalog").get().asFile)
     }
+
     signingConfigs {
-        create("uniLocal") {
-            // 开发／模拟器包用自己的证书。
-            //
-            // 实车包**不能**用这张证书：车机的
-            // android.car.permission.CAR_VENDOR_EXTENSION 是 signature|privileged，
-            // 只有与原车 Launcher 同一张证书（cardesk 实机验证用的 platform 证书）
-            // 才拿得到，否则车控 SDK 不会被创建，句柄永远拿不到，
-            // 车控通道与音乐律动氛围灯全都用不了。
-            //
-            // 实车包用 tools/sign_car_apk.py 单独签名，私钥不入库。
-            val officialStore = file("/data/tools/linkco-android/uni-debug.keystore")
-            storeFile = file(System.getenv("UNI_SIGNING_STORE") ?: if (officialStore.exists()) officialStore.absolutePath else "${System.getProperty("user.home")}/.android/uni-debug.keystore")
-            storePassword = "android"
-            keyAlias = "uni-debug"
-            keyPassword = "android"
+        create("platform") {
+            val keyFile = file("../../../../tools/platform.p12")
+            if (keyFile.exists()) {
+                storeFile = keyFile
+                storePassword = "android"
+                keyAlias = "platform"
+                keyPassword = "android"
+                storeType = "PKCS12"
+            }
         }
     }
+
     buildTypes {
-        debug { signingConfig = signingConfigs.getByName("uniLocal") }
+        debug {
+            signingConfig = signingConfigs.getByName("platform")
+        }
         release {
-            // Local test distribution using the existing baseline development certificate.
-            // The IP753 car package is signed separately by tools/sign_car_apk.py.
-            signingConfig = signingConfigs.getByName("uniLocal")
+            signingConfig = signingConfigs.getByName("platform")
         }
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-    }
-}
-
-flutter {
-    source = "../.."
-}
 
 dependencies {
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20240303")
 }

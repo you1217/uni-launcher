@@ -39,14 +39,13 @@
   <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
   <!-- 明文只放行「传文件」里用户自己填的下载地址：局域网 NAS、内网发布页和旧站点
        基本都是 http://，系统默认会直接拒连。应用自身不发起任何其他明文请求。 -->
-  <application android:label="UNI 桌面" android:name="${applicationName}" android:icon="@drawable/uni_icon" android:allowBackup="false" android:usesCleartextTraffic="true">
-    <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleInstance" android:screenOrientation="landscape" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
-      <meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme"/>
+  <application android:label="UNI 桌面" android:name=".UniLauncherApp" android:icon="@drawable/uni_icon" android:allowBackup="false" android:usesCleartextTraffic="true">
+    <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleInstance" android:screenOrientation="landscape" android:theme="@style/Theme.UniLauncher" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
       <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
       <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.HOME"/><category android:name="android.intent.category.DEFAULT"/></intent-filter>
     </activity>
     <!-- A separate launcher alias keeps settings discoverable in “全部应用” while
-         routing into the same Flutter activity with the settings intent. -->
+         routing into the same activity with the settings intent. -->
     <activity-alias android:name=".DesktopSettings" android:targetActivity=".MainActivity"
         android:label="UNI桌面设置" android:icon="@drawable/uni_icon" android:exported="true">
       <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
@@ -67,6 +66,5 @@
       <intent-filter><action android:name="android.intent.action.USER_UNLOCKED"/></intent-filter>
     </receiver>
     <receiver android:name=".DefaultHomeAlarmReceiver" android:exported="false"/>
-        <meta-data android:name="flutterEmbedding" android:value="2"/>
   </application>
 </manifest>

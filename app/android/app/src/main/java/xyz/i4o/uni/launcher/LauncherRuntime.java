@@ -128,6 +128,13 @@ public final class LauncherRuntime {
     }
 
     public SharedPreferences prefs(){return prefs;}
+    public MediaAdapter media(){return media;}
+    public VehicleTelemetry vehicle(){return vehicle;}
+    public AppRepository apps(){return apps;}
+    public AmapTrafficLightAdapter trafficLights(){return trafficLights;}
+    public OfficialWeatherAdapter weather(){return weather;}
+    public SystemStatusAdapter systemStatus(){return systemStatus;}
+    public NavigationApps navigation(){return navigation;}
 
     /** 普通快照：按游标只补发变化的分组，不携带设置目录（Dock/面板用）。 */
     public JSONObject snapshot(StaticCursor cursor){return onMain(()->buildSnapshot(cursor,false));}
