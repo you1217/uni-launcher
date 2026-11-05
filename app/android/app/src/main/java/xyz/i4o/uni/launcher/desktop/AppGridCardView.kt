@@ -1,6 +1,8 @@
 package xyz.i4o.uni.launcher.desktop
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
 import android.util.AttributeSet
@@ -9,12 +11,13 @@ import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import org.json.JSONArray
+import android.widget.Toast
 import xyz.i4o.uni.launcher.LauncherRuntime
 import xyz.i4o.uni.launcher.R
 
 /**
- * 1:1 Visual reproduction of UNI Launcher's Fast App Grid Card.
+ * 1:1 Fast App Grid Card with Customization Support.
+ * Allows users to tap to launch or long-press to customize any of the 8 app slots.
  */
 class AppGridCardView @JvmOverloads constructor(
     context: Context,
@@ -23,57 +26,89 @@ class AppGridCardView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private val titleView: TextView
+    private val subHintView: TextView
     private val gridLayout: GridLayout
+    private val prefs: SharedPreferences = context.getSharedPreferences("launcher_quick_apps", Context.MODE_PRIVATE)
+
+    private val defaultPkgs = listOf(
+        "com.autonavi.amapauto",
+        "ecarx.xsf.mediacenter",
+        "official_camera",
+        "com.ecarx.carsettings",
+        "com.tencent.wecarflow",
+        "com.android.settings",
+        "com.android.documentsui",
+        "all_apps"
+    )
 
     init {
         orientation = VERTICAL
         val pad = dpToPx(16f)
         setPadding(pad, pad, pad, pad)
 
+        val header = LinearLayout(context).apply {
+            orientation = HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        }
+
         titleView = TextView(context).apply {
             text = "常用应用"
             setTextColor(Color.WHITE)
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
-            setPadding(0, 0, 0, dpToPx(8f))
+            layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
         }
-        addView(titleView)
+
+        subHintView = TextView(context).apply {
+            text = "长按格子可自定义"
+            setTextColor(Color.parseColor("#66FFFFFF"))
+            textSize = 11f
+        }
+
+        header.addView(titleView)
+        header.addView(subHintView)
+        addView(header)
 
         gridLayout = GridLayout(context).apply {
             columnCount = 4
             rowCount = 2
-            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
+                topMargin = dpToPx(6f)
+            }
         }
         addView(gridLayout)
 
-        populateDefaultApps()
+        populateApps()
     }
 
-    private fun populateDefaultApps() {
-        val defaultApps = listOf(
-            Triple("高德地图", "com.autonavi.amapauto", R.drawable.ic_dock_nav),
-            Triple("音乐播放", "ecarx.xsf.mediacenter", R.drawable.ic_dock_music),
-            Triple("全景影像", "official_camera", R.drawable.ic_dock_camera),
-            Triple("车辆设置", "com.ecarx.carsettings", R.drawable.ic_dock_car),
-            Triple("应用中心", "official_market", R.drawable.ic_dock_apps),
-            Triple("系统设置", "com.android.settings", R.drawable.ic_dock_settings),
-            Triple("文件管理", "com.android.documentsui", R.drawable.ic_dock_apps),
-            Triple("桌面设置", "xyz.i4o.uni.launcher.DesktopSettings", R.drawable.ic_dock_settings)
-        )
-
+    fun populateApps() {
         gridLayout.removeAllViews()
-        for ((label, pkg, iconRes) in defaultApps) {
+        val pm = context.packageManager
+
+        for (slot in 0 until 8) {
+            val pkg = prefs.getString("slot_$slot", defaultPkgs[slot]) ?: defaultPkgs[slot]
+            val (label, iconRes, realIcon) = resolveAppInfo(pm, pkg)
+
             val appItem = LinearLayout(context).apply {
                 orientation = VERTICAL
                 gravity = Gravity.CENTER
                 setPadding(dpToPx(4f), dpToPx(6f), dpToPx(4f), dpToPx(6f))
                 setBackgroundResource(R.drawable.bg_pill_badge)
+                isClickable = true
+                isFocusable = true
 
                 val icon = ImageView(context).apply {
-                    setImageResource(iconRes)
-                    val iconSize = dpToPx(24f)
+                    val iconSize = dpToPx(28f)
                     layoutParams = LayoutParams(iconSize, iconSize)
+                    scaleType = ImageView.ScaleType.FIT_CENTER
+                    if (realIcon != null) {
+                        setImageDrawable(realIcon)
+                    } else {
+                        setImageResource(iconRes)
+                    }
                 }
+
                 val name = TextView(context).apply {
                     text = label
                     setTextColor(Color.parseColor("#E6FFFFFF"))
@@ -89,6 +124,16 @@ class AppGridCardView @JvmOverloads constructor(
                 setOnClickListener {
                     launchTarget(pkg)
                 }
+
+                setOnLongClickListener {
+                    // Open App Picker to customize this slot
+                    AllAppsCenterDialog(context) { selected ->
+                        prefs.edit().putString("slot_$slot", selected.pkg).apply()
+                        populateApps()
+                        Toast.makeText(context, "已设置第 ${slot + 1} 格为 ${selected.label}", Toast.LENGTH_SHORT).show()
+                    }.show()
+                    true
+                }
             }
 
             val param = GridLayout.LayoutParams().apply {
@@ -102,23 +147,54 @@ class AppGridCardView @JvmOverloads constructor(
         }
     }
 
+    private fun resolveAppInfo(pm: PackageManager, target: String): Triple<String, Int, android.graphics.drawable.Drawable?> {
+        return when (target) {
+            "official_camera" -> Triple("全景影像", R.drawable.ic_dock_camera, null)
+            "all_apps" -> Triple("全部应用", R.drawable.ic_dock_apps, null)
+            "xyz.i4o.uni.launcher.DesktopSettings" -> Triple("桌面设置", R.drawable.ic_dock_settings, null)
+            else -> {
+                try {
+                    val info = pm.getApplicationInfo(target, 0)
+                    val label = pm.getApplicationLabel(info).toString()
+                    val icon = pm.getApplicationIcon(info)
+                    Triple(label, 0, icon)
+                } catch (e: Exception) {
+                    val fallbackName = when (target) {
+                        "com.autonavi.amapauto" -> "高德地图"
+                        "ecarx.xsf.mediacenter" -> "音乐播放"
+                        "com.ecarx.carsettings" -> "车辆设置"
+                        "com.android.settings" -> "系统设置"
+                        "com.android.documentsui" -> "文件管理"
+                        "com.tencent.wecarflow" -> "微信车载"
+                        else -> "常用应用"
+                    }
+                    Triple(fallbackName, R.drawable.ic_dock_apps, null)
+                }
+            }
+        }
+    }
+
     private fun launchTarget(target: String) {
         val rt = LauncherRuntime.get(context)
         when (target) {
             "official_camera" -> {
                 rt.apps().launchOfficialCamera(rt.vehicle().cameraCapability())
             }
-            "official_market" -> {
-                rt.apps().launchPackage("com.ecarx.membercenter")
+            "all_apps" -> {
+                AllAppsCenterDialog(context).show()
             }
             else -> {
-                rt.apps().launchPackage(target)
+                val ok = rt.apps().launchPackage(target)
+                if (!ok) {
+                    val intent = context.packageManager.getLaunchIntentForPackage(target)
+                    if (intent != null) {
+                        context.startActivity(intent)
+                    } else {
+                        Toast.makeText(context, "应用未安装或无法启动", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
-    }
-
-    fun updateApps(apps: JSONArray) {
-        // Dynamic app customization
     }
 
     private fun dpToPx(dp: Float): Int {

@@ -100,6 +100,13 @@
             android:clipToPadding="false"
             android:overScrollMode="never" />
 
+        <!-- Desktop Smooth Page Indicator -->
+        <xyz.i4o.uni.launcher.desktop.DesktopPageIndicator
+            android:id="@+id/desktopPageIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:layout_marginBottom="4dp" />
+
         <!-- Bottom Floating Dock Bar -->
         <FrameLayout
             android:id="@+id/dockContainer"

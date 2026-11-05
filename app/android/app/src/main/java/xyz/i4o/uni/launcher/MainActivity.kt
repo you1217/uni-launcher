@@ -9,8 +9,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import org.json.JSONObject
+import xyz.i4o.uni.launcher.desktop.AllAppsCenterDialog
 import xyz.i4o.uni.launcher.desktop.CardLibraryDialog
 import xyz.i4o.uni.launcher.desktop.DesktopLayoutManager
+import xyz.i4o.uni.launcher.desktop.DesktopPageIndicator
 import xyz.i4o.uni.launcher.desktop.DesktopSettingsDialog
 import xyz.i4o.uni.launcher.desktop.WorkspacePagerAdapter
 
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var topWeatherText: TextView
     private lateinit var topSystemStatus: TextView
     private lateinit var wallpaperImageView: ImageView
+    private lateinit var desktopPageIndicator: DesktopPageIndicator
     private var currentWallpaper: String = "graphite_night"
 
     private val cursor = LauncherRuntime.StaticCursor()
@@ -52,6 +55,9 @@ class MainActivity : AppCompatActivity() {
         layoutManager = DesktopLayoutManager.getInstance(this)
         layoutManager.onLayoutChanged = {
             workspaceAdapter.notifyDataSetChanged()
+            if (::desktopPageIndicator.isInitialized) {
+                desktopPageIndicator.pageCount = layoutManager.getPageCount()
+            }
         }
 
         topWeatherText = findViewById(R.id.topWeatherText)
@@ -112,6 +118,10 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = workspaceAdapter
         viewPager.offscreenPageLimit = 1
 
+        desktopPageIndicator = findViewById(R.id.desktopPageIndicator)
+        desktopPageIndicator.pageCount = layoutManager.getPageCount()
+        desktopPageIndicator.attachToViewPager(viewPager)
+
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 runtime.setDesktopContent(position == 0)
@@ -133,8 +143,9 @@ class MainActivity : AppCompatActivity() {
             runtime.apps().launchPackage("com.ecarx.carsettings")
         }
         findViewById<View>(R.id.dockAppsBtn).setOnClickListener {
-            val next = if (viewPager.currentItem == 0) 1 else 0
-            viewPager.setCurrentItem(next, true)
+            AllAppsCenterDialog(this) { selectedApp ->
+                layoutManager.addCard("shortcuts", viewPager.currentItem)
+            }.show()
         }
         findViewById<View>(R.id.dockSettingsBtn).apply {
             setOnClickListener {
@@ -191,6 +202,9 @@ class MainActivity : AppCompatActivity() {
         workspaceAdapter.isEditMode = editing
         findViewById<View>(R.id.dockContainer).visibility = if (editing) View.GONE else View.VISIBLE
         findViewById<View>(R.id.editBarContainer).visibility = if (editing) View.VISIBLE else View.GONE
+        if (::desktopPageIndicator.isInitialized) {
+            desktopPageIndicator.visibility = if (editing || layoutManager.getPageCount() <= 1) View.GONE else View.VISIBLE
+        }
     }
 
     private fun sendAction(action: String, value: String = "") {
