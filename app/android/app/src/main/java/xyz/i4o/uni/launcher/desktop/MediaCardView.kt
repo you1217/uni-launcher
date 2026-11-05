@@ -94,7 +94,7 @@ class MediaCardView @JvmOverloads constructor(
         // Top row: Source badge
         sourceBadge = TextView(context).apply {
             text = "多媒体"
-            setTextColor(Color.parseColor("#FF5FA8")) // Nocturne Pink
+            setTextColor(Color.parseColor("#3BE2C0")) // Nocturne Mint
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
             setBackgroundResource(R.drawable.bg_pill_badge)
@@ -135,6 +135,7 @@ class MediaCardView @JvmOverloads constructor(
             layoutParams = LayoutParams(0, dpToPx(4f), 1f).apply {
                 marginEnd = dpToPx(8f)
             }
+            progressDrawable = androidx.core.content.ContextCompat.getDrawable(context, R.drawable.progress_bar_mint)
             max = 1000
             progress = 0
         }

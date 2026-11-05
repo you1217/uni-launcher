@@ -107,6 +107,12 @@ class FullOemDockView @JvmOverloads constructor(
         setupDiscAnimation()
     }
 
+    fun setActivePage(position: Int) {
+        if (::homeIndicatorDot.isInitialized) {
+            homeIndicatorDot.visibility = if (position == 0) View.VISIBLE else View.INVISIBLE
+        }
+    }
+
     fun setDockStyle(style: String) {
         dockStyle = style
         applyStyleAppearance()
@@ -176,13 +182,13 @@ class FullOemDockView @JvmOverloads constructor(
     }
 
     // ==========================================
-    // 1. LEFT SECTION (Navigation & System Controls - 352dp)
+    // 1. LEFT SECTION (Navigation & System Controls - 320dp)
     // ==========================================
     private fun buildLeftSection(parent: LinearLayout) {
         val leftLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            layoutParams = LinearLayout.LayoutParams(dpToPx(352f), LinearLayout.LayoutParams.MATCH_PARENT)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(320f), LinearLayout.LayoutParams.MATCH_PARENT)
         }
 
         // Back
@@ -195,34 +201,23 @@ class FullOemDockView @JvmOverloads constructor(
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
             isClickable = true
             isFocusable = true
-            setBackgroundResource(R.drawable.bg_control_circle)
-
-            val innerCol = LinearLayout(context).apply {
-                orientation = LinearLayout.VERTICAL
-                gravity = Gravity.CENTER
-                layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
-            }
+            contentDescription = "首页"
 
             val icon = ImageView(context).apply {
                 setImageResource(R.drawable.ic_dock_home)
-                layoutParams = LinearLayout.LayoutParams(dpToPx(24f), dpToPx(24f))
+                setColorFilter(Color.parseColor("#EFF4F6"))
+                layoutParams = FrameLayout.LayoutParams(dpToPx(26f), dpToPx(26f)).apply {
+                    gravity = Gravity.CENTER
+                }
             }
-            val label = TextView(context).apply {
-                text = "首页"
-                setTextColor(Color.WHITE)
-                textSize = 10f
-                setPadding(0, dpToPx(2f), 0, 0)
-            }
-            innerCol.addView(icon)
-            innerCol.addView(label)
-            addView(innerCol)
+            addView(icon)
 
             homeIndicatorDot = View(context).apply {
                 layoutParams = FrameLayout.LayoutParams(dpToPx(16f), dpToPx(3f)).apply {
                     gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-                    bottomMargin = dpToPx(2f)
+                    bottomMargin = dpToPx(4f)
                 }
-                setBackgroundResource(R.drawable.bg_control_circle_accent)
+                setBackgroundResource(R.drawable.bg_dock_pill_accent)
                 visibility = View.VISIBLE
             }
             addView(homeIndicatorDot)
@@ -279,10 +274,10 @@ class FullOemDockView @JvmOverloads constructor(
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setBackgroundResource(R.drawable.bg_pill_badge)
-            val padH = dpToPx(12f)
-            val padV = dpToPx(6f)
+            val padH = dpToPx(10f)
+            val padV = dpToPx(4f)
             setPadding(padH, padV, padH, padV)
-            layoutParams = LinearLayout.LayoutParams(0, dpToPx(52f), 5.0f)
+            layoutParams = LinearLayout.LayoutParams(0, dpToPx(50f), 5.0f)
         }
 
         val showClimateSheet = { ClimateControlBottomSheet(context).show() }
@@ -290,12 +285,12 @@ class FullOemDockView @JvmOverloads constructor(
         // 1. A/C Mode Toggle
         acBtn = TextView(context).apply {
             text = "A/C"
-            textSize = 14f
+            textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(Color.parseColor("#3BE2C0"))
             gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(dpToPx(44f), dpToPx(38f))
-            setBackgroundResource(R.drawable.bg_control_circle)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(42f), dpToPx(36f))
+            setBackgroundResource(R.drawable.bg_dock_pill_accent)
             isClickable = true
             isFocusable = true
             setOnClickListener {
@@ -309,11 +304,14 @@ class FullOemDockView @JvmOverloads constructor(
         // 2. Driver Temperature (Click opens sheet)
         driverTempText = TextView(context).apply {
             text = "22.0°"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 19f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            isSingleLine = true
+            maxLines = 1
+            includeFontPadding = false
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.15f)
             isClickable = true
             isFocusable = true
             setOnClickListener { showClimateSheet() }
@@ -322,10 +320,10 @@ class FullOemDockView @JvmOverloads constructor(
 
         // 3. DockClimateButton (Fan / AUTO)
         val fanContainer = FrameLayout(context).apply {
-            layoutParams = LinearLayout.LayoutParams(dpToPx(52f), dpToPx(42f))
+            layoutParams = LinearLayout.LayoutParams(dpToPx(52f), dpToPx(38f))
             isClickable = true
             isFocusable = true
-            setBackgroundResource(R.drawable.bg_control_circle)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             setOnClickListener { showClimateSheet() }
         }
 
@@ -348,14 +346,14 @@ class FullOemDockView @JvmOverloads constructor(
             fanIcon = ImageView(context).apply {
                 setImageResource(R.drawable.ic_climate_fan)
                 setColorFilter(Color.parseColor("#3BE2C0"))
-                layoutParams = LinearLayout.LayoutParams(dpToPx(18f), dpToPx(18f))
+                layoutParams = LinearLayout.LayoutParams(dpToPx(16f), dpToPx(16f))
             }
             addView(fanIcon)
 
             val segmentsRow = LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dpToPx(8f)).apply {
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dpToPx(6f)).apply {
                     topMargin = dpToPx(2f)
                 }
             }
@@ -363,10 +361,10 @@ class FullOemDockView @JvmOverloads constructor(
             fanSegmentViews.clear()
             for (i in 1..7) {
                 val seg = View(context).apply {
-                    rotation = -30f
-                    setBackgroundColor(if (i <= 3) Color.parseColor("#3BE2C0") else Color.parseColor("#33FFFFFF"))
-                    layoutParams = LinearLayout.LayoutParams(dpToPx(2.5f), dpToPx(6f)).apply {
-                        if (i < 7) marginEnd = dpToPx(2.5f)
+                    rotation = -25f
+                    setBackgroundColor(if (i <= 3) Color.parseColor("#3BE2C0") else Color.parseColor("#26FFFFFF"))
+                    layoutParams = LinearLayout.LayoutParams(dpToPx(2.5f), dpToPx(5f)).apply {
+                        if (i < 7) marginEnd = dpToPx(2f)
                     }
                 }
                 fanSegmentViews.add(seg)
@@ -381,12 +379,12 @@ class FullOemDockView @JvmOverloads constructor(
         recircIcon = ImageView(context).apply {
             setImageResource(R.drawable.ic_circulation)
             setColorFilter(Color.parseColor("#3BE2C0"))
-            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
-            val p = dpToPx(6f)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(36f), dpToPx(36f))
+            val p = dpToPx(7f)
             setPadding(p, p, p, p)
             isClickable = true
             isFocusable = true
-            setBackgroundResource(R.drawable.bg_control_circle)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             setOnClickListener {
                 sendCommand("climate-mode", "recirc")
             }
@@ -396,11 +394,14 @@ class FullOemDockView @JvmOverloads constructor(
         // 5. Passenger Temperature (Click opens sheet)
         passengerTempText = TextView(context).apply {
             text = "22.0°"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 19f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            isSingleLine = true
+            maxLines = 1
+            includeFontPadding = false
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.15f)
             isClickable = true
             isFocusable = true
             setOnClickListener { showClimateSheet() }
@@ -413,12 +414,12 @@ class FullOemDockView @JvmOverloads constructor(
         climatePowerIcon = ImageView(context).apply {
             setImageResource(R.drawable.ic_climate_power)
             setColorFilter(Color.parseColor("#3BE2C0"))
-            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
-            val p = dpToPx(6f)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(36f), dpToPx(36f))
+            val p = dpToPx(7f)
             setPadding(p, p, p, p)
             isClickable = true
             isFocusable = true
-            setBackgroundResource(R.drawable.bg_control_circle)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             setOnClickListener {
                 sendCommand("climate-power", "")
             }
@@ -433,7 +434,7 @@ class FullOemDockView @JvmOverloads constructor(
     // ==========================================
     private fun buildRightSection(parent: LinearLayout) {
         val rightFrame = FrameLayout(context).apply {
-            layoutParams = LinearLayout.LayoutParams(0, dpToPx(52f), 5.5f)
+            layoutParams = LinearLayout.LayoutParams(0, dpToPx(50f), 5.2f)
             setBackgroundResource(R.drawable.bg_pill_badge)
         }
 
@@ -448,13 +449,13 @@ class FullOemDockView @JvmOverloads constructor(
         // Prev
         val prevBtn = ImageView(context).apply {
             setImageResource(R.drawable.ic_skip_previous)
-            setColorFilter(Color.WHITE)
+            setColorFilter(Color.parseColor("#EFF4F6"))
             layoutParams = LinearLayout.LayoutParams(dpToPx(30f), dpToPx(30f))
-            val p = dpToPx(4f)
+            val p = dpToPx(5f)
             setPadding(p, p, p, p)
             isClickable = true
             isFocusable = true
-            setBackgroundResource(R.drawable.bg_control_circle)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             setOnClickListener { sendCommand("previous", "") }
         }
         rightLayout.addView(prevBtn)
@@ -471,7 +472,7 @@ class FullOemDockView @JvmOverloads constructor(
             setPadding(p, p, p, p)
             isClickable = true
             isFocusable = true
-            setBackgroundResource(R.drawable.bg_control_circle)
+            setBackgroundResource(R.drawable.bg_control_circle_accent)
             setOnClickListener { sendCommand("toggle-play", "") }
         }
         rightLayout.addView(playPauseBtn)
@@ -479,13 +480,13 @@ class FullOemDockView @JvmOverloads constructor(
         // Next
         val nextBtn = ImageView(context).apply {
             setImageResource(R.drawable.ic_skip_next)
-            setColorFilter(Color.WHITE)
+            setColorFilter(Color.parseColor("#EFF4F6"))
             layoutParams = LinearLayout.LayoutParams(dpToPx(30f), dpToPx(30f))
-            val p = dpToPx(4f)
+            val p = dpToPx(5f)
             setPadding(p, p, p, p)
             isClickable = true
             isFocusable = true
-            setBackgroundResource(R.drawable.bg_control_circle)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             setOnClickListener { sendCommand("next", "") }
         }
         rightLayout.addView(nextBtn)
@@ -521,19 +522,21 @@ class FullOemDockView @JvmOverloads constructor(
 
         mediaTitleText = TextView(context).apply {
             text = "向海而行"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             maxLines = 1
+            isSingleLine = true
             ellipsize = android.text.TextUtils.TruncateAt.MARQUEE
             isSelected = true
         }
 
         mediaArtistText = TextView(context).apply {
             text = "Coastline · 晨间驾驶歌单"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 10f
             maxLines = 1
+            isSingleLine = true
             ellipsize = android.text.TextUtils.TruncateAt.END
         }
 
@@ -592,7 +595,7 @@ class FullOemDockView @JvmOverloads constructor(
     // ==========================================
     private fun buildUniMenuSection(parent: LinearLayout) {
         val uniContainer = FrameLayout(context).apply {
-            layoutParams = LinearLayout.LayoutParams(dpToPx(52f), dpToPx(52f))
+            layoutParams = LinearLayout.LayoutParams(dpToPx(50f), dpToPx(50f))
             isClickable = true
             isFocusable = true
             setBackgroundResource(R.drawable.bg_pill_badge)
@@ -600,7 +603,7 @@ class FullOemDockView @JvmOverloads constructor(
 
         val uniIcon = ImageView(context).apply {
             setImageResource(R.drawable.uni_icon)
-            layoutParams = FrameLayout.LayoutParams(dpToPx(32f), dpToPx(32f)).apply {
+            layoutParams = FrameLayout.LayoutParams(dpToPx(28f), dpToPx(28f)).apply {
                 gravity = Gravity.CENTER
             }
         }
@@ -660,10 +663,10 @@ class FullOemDockView @JvmOverloads constructor(
         // AC Button
         if (isAc) {
             acBtn.setTextColor(Color.parseColor("#3BE2C0"))
-            acBtn.setBackgroundResource(R.drawable.bg_control_circle_accent)
+            acBtn.setBackgroundResource(R.drawable.bg_dock_pill_accent)
         } else {
-            acBtn.setTextColor(Color.parseColor("#80FFFFFF"))
-            acBtn.setBackgroundResource(R.drawable.bg_control_circle)
+            acBtn.setTextColor(Color.parseColor("#7A8B9E"))
+            acBtn.setBackgroundResource(R.drawable.bg_dock_item_glass)
         }
 
         // Fan / Auto
@@ -682,12 +685,12 @@ class FullOemDockView @JvmOverloads constructor(
 
         // Recirc
         recircIcon.setColorFilter(
-            if (isRecirc) Color.parseColor("#3BE2C0") else Color.parseColor("#80FFFFFF")
+            if (isRecirc) Color.parseColor("#3BE2C0") else Color.parseColor("#7A8B9E")
         )
 
         // Power
         climatePowerIcon.setColorFilter(
-            if (isPower) Color.parseColor("#3BE2C0") else Color.parseColor("#80FFFFFF")
+            if (isPower) Color.parseColor("#3BE2C0") else Color.parseColor("#7A8B9E")
         )
 
         // 2. Update Media
@@ -733,30 +736,21 @@ class FullOemDockView @JvmOverloads constructor(
         }
     }
 
-    private fun createDockActionButton(iconRes: Int, labelText: String, onClick: () -> Unit): View {
-        return LinearLayout(context).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
+    private fun createDockActionButton(iconRes: Int, contentDesc: String, onClick: () -> Unit): View {
+        return FrameLayout(context).apply {
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
             isClickable = true
             isFocusable = true
-            setBackgroundResource(R.drawable.bg_control_circle)
+            contentDescription = contentDesc
 
             val icon = ImageView(context).apply {
                 setImageResource(iconRes)
-                setColorFilter(Color.WHITE)
-                layoutParams = LinearLayout.LayoutParams(dpToPx(24f), dpToPx(24f))
+                setColorFilter(Color.parseColor("#EFF4F6"))
+                layoutParams = FrameLayout.LayoutParams(dpToPx(26f), dpToPx(26f)).apply {
+                    gravity = Gravity.CENTER
+                }
             }
-
-            val label = TextView(context).apply {
-                text = labelText
-                setTextColor(Color.WHITE)
-                textSize = 10f
-                setPadding(0, dpToPx(2f), 0, 0)
-            }
-
             addView(icon)
-            addView(label)
             setOnClickListener { onClick() }
         }
     }

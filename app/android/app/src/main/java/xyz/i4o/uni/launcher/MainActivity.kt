@@ -212,6 +212,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 runtime.setDesktopContent(position == 0)
+                fullOemDockView.setActivePage(position)
             }
         })
     }

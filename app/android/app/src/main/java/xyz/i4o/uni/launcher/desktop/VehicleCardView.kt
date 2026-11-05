@@ -18,9 +18,10 @@ import xyz.i4o.uni.launcher.R
  *
  * Displays:
  * - 3D front-left perspective artwork of Lynk & Co 05
- * - 4 floating tire pressure capsules mapped precisely to wheel positions
+ * - 4 floating high-precision acrylic tire pressure chips mapped to wheel positions
  * - Dynamic door / tailgate open alert markers
- * - Header with Range, Fuel, and Climate status
+ * - Header with Range and Fuel status in Nocturne Mint
+ * - Subdued bottom telemetry summary
  */
 class VehicleCardView @JvmOverloads constructor(
     context: Context,
@@ -34,11 +35,35 @@ class VehicleCardView @JvmOverloads constructor(
     private val doorAlertView: TextView
     private val climateSummaryView: TextView
 
-    // 4 Tire Pressure Capsules
-    private val flTirePill: TextView
-    private val frTirePill: TextView
-    private val rlTirePill: TextView
-    private val rrTirePill: TextView
+    // 4 Precision Tire Pressure Chips
+    private val flChip: TireChip
+    private val frChip: TireChip
+    private val rlChip: TireChip
+    private val rrChip: TireChip
+
+    private class TireChip(
+        val container: LinearLayout,
+        val labelView: TextView,
+        val valView: TextView
+    ) {
+        fun update(label: String, bar: Double, isConnected: Boolean) {
+            labelView.text = label
+            if (bar > 0) {
+                valView.text = "%.1f bar".format(bar)
+                if (bar in 2.0..2.8) {
+                    valView.setTextColor(Color.parseColor("#3BE2C0"))
+                    container.setBackgroundResource(R.drawable.bg_tire_chip)
+                } else {
+                    valView.setTextColor(Color.parseColor("#FFFF5252"))
+                    container.setBackgroundResource(R.drawable.bg_pill_badge_warning)
+                }
+            } else {
+                valView.text = if (isConnected) "2.3 bar" else "— bar"
+                valView.setTextColor(Color.parseColor("#8A99AD"))
+                container.setBackgroundResource(R.drawable.bg_tire_chip)
+            }
+        }
+    }
 
     init {
         val pad = dpToPx(16f)
@@ -55,7 +80,7 @@ class VehicleCardView @JvmOverloads constructor(
 
         titleView = TextView(context).apply {
             text = "领克 05"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 16f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -74,8 +99,8 @@ class VehicleCardView @JvmOverloads constructor(
 
         // 2. Central Car Visual Container
         val carContainer = FrameLayout(context).apply {
-            val topMargin = dpToPx(32f)
-            val bottomMargin = dpToPx(36f)
+            val topMargin = dpToPx(30f)
+            val bottomMargin = dpToPx(34f)
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
                 setMargins(0, topMargin, 0, bottomMargin)
             }
@@ -90,54 +115,61 @@ class VehicleCardView @JvmOverloads constructor(
         }
         carContainer.addView(carImageView)
 
-        // 3. Floating Tire Pressure Pills (Perspective-aligned)
+        // 3. Floating Tire Pressure Chips (Perspective-aligned)
         // In front-left perspective:
         // Right-Front is top-left in screen space
         // Right-Rear is top-right in screen space
         // Left-Front is bottom-left / center in screen space
         // Left-Rear is bottom-right in screen space
-        frTirePill = createTirePill("右前 2.3 bar").apply {
-            val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+        val frPair = createTireChip("右前", "2.3 bar")
+        frChip = frPair.first
+        val frView = frPair.second.apply {
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.START or Gravity.TOP
-                marginStart = dpToPx(8f)
+                marginStart = dpToPx(12f)
                 topMargin = dpToPx(12f)
             }
-            layoutParams = lp
-        }
-        rrTirePill = createTirePill("右后 2.3 bar").apply {
-            val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-                gravity = Gravity.END or Gravity.TOP
-                marginEnd = dpToPx(8f)
-                topMargin = dpToPx(8f)
-            }
-            layoutParams = lp
-        }
-        flTirePill = createTirePill("左前 2.3 bar").apply {
-            val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-                gravity = Gravity.START or Gravity.BOTTOM
-                marginStart = dpToPx(16f)
-                bottomMargin = dpToPx(6f)
-            }
-            layoutParams = lp
-        }
-        rlTirePill = createTirePill("左后 2.3 bar").apply {
-            val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-                gravity = Gravity.END or Gravity.BOTTOM
-                marginEnd = dpToPx(12f)
-                bottomMargin = dpToPx(14f)
-            }
-            layoutParams = lp
         }
 
-        carContainer.addView(frTirePill)
-        carContainer.addView(rrTirePill)
-        carContainer.addView(flTirePill)
-        carContainer.addView(rlTirePill)
+        val rrPair = createTireChip("右后", "2.3 bar")
+        rrChip = rrPair.first
+        val rrView = rrPair.second.apply {
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                gravity = Gravity.END or Gravity.TOP
+                marginEnd = dpToPx(12f)
+                topMargin = dpToPx(8f)
+            }
+        }
+
+        val flPair = createTireChip("左前", "2.3 bar")
+        flChip = flPair.first
+        val flView = flPair.second.apply {
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                gravity = Gravity.START or Gravity.BOTTOM
+                marginStart = dpToPx(18f)
+                bottomMargin = dpToPx(6f)
+            }
+        }
+
+        val rlPair = createTireChip("左后", "2.3 bar")
+        rlChip = rlPair.first
+        val rlView = rlPair.second.apply {
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                gravity = Gravity.END or Gravity.BOTTOM
+                marginEnd = dpToPx(14f)
+                bottomMargin = dpToPx(12f)
+            }
+        }
+
+        carContainer.addView(frView)
+        carContainer.addView(rrView)
+        carContainer.addView(flView)
+        carContainer.addView(rlView)
 
         // Door alert marker centered in the car container
         doorAlertView = TextView(context).apply {
             text = "主驾车门开启"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setBackgroundResource(R.drawable.bg_pill_badge_warning)
@@ -154,9 +186,9 @@ class VehicleCardView @JvmOverloads constructor(
 
         // 4. Bottom Climate & Telemetry Summary
         climateSummaryView = TextView(context).apply {
-            text = "空调: 22.5°C | AUTO | 风量 2"
-            setTextColor(Color.parseColor("#99FFFFFF"))
-            textSize = 12f
+            text = "空调: 22.5°C · AUTO · 风量 2"
+            setTextColor(Color.parseColor("#8A99AD"))
+            textSize = 11f
             val lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.BOTTOM or Gravity.START
             }
@@ -165,15 +197,35 @@ class VehicleCardView @JvmOverloads constructor(
         addView(climateSummaryView)
     }
 
-    private fun createTirePill(text: String): TextView {
-        return TextView(context).apply {
-            this.text = text
-            setTextColor(Color.WHITE)
+    private fun createTireChip(label: String, initialVal: String): Pair<TireChip, LinearLayout> {
+        val container = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val padH = dpToPx(8f)
+            val padV = dpToPx(3f)
+            setPadding(padH, padV, padH, padV)
+        }
+
+        val labelView = TextView(context).apply {
+            text = label
+            setTextColor(Color.parseColor("#8A99AD"))
+            textSize = 10f
+            typeface = Typeface.DEFAULT_BOLD
+            setPadding(0, 0, dpToPx(4f), 0)
+        }
+
+        val valView = TextView(context).apply {
+            text = initialVal
+            setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(10f), dpToPx(4f), dpToPx(10f), dpToPx(4f))
         }
+
+        container.addView(labelView)
+        container.addView(valView)
+
+        return Pair(TireChip(container, labelView, valView), container)
     }
 
     fun updateTelemetry(telemetry: JSONObject, climate: JSONObject) {
@@ -196,29 +248,15 @@ class VehicleCardView @JvmOverloads constructor(
         val rlObj = fields.optJSONObject("pressureRearLeft")
         val rrObj = fields.optJSONObject("pressureRearRight")
 
-        if (flObj != null && flObj.optBoolean("valid", false)) {
-            applyTireState(flTirePill, "左前", flObj.optDouble("value", 2.4))
-        } else {
-            flTirePill.text = if (isConnected) "左前 2.4 bar" else "左前 — bar"
-        }
+        val flVal = if (flObj != null && flObj.optBoolean("valid", false)) flObj.optDouble("value", 2.4) else if (isConnected) 2.4 else -1.0
+        val frVal = if (frObj != null && frObj.optBoolean("valid", false)) frObj.optDouble("value", 2.4) else if (isConnected) 2.4 else -1.0
+        val rlVal = if (rlObj != null && rlObj.optBoolean("valid", false)) rlObj.optDouble("value", 2.3) else if (isConnected) 2.3 else -1.0
+        val rrVal = if (rrObj != null && rrObj.optBoolean("valid", false)) rrObj.optDouble("value", 2.3) else if (isConnected) 2.3 else -1.0
 
-        if (frObj != null && frObj.optBoolean("valid", false)) {
-            applyTireState(frTirePill, "右前", frObj.optDouble("value", 2.4))
-        } else {
-            frTirePill.text = if (isConnected) "右前 2.4 bar" else "右前 — bar"
-        }
-
-        if (rlObj != null && rlObj.optBoolean("valid", false)) {
-            applyTireState(rlTirePill, "左后", rlObj.optDouble("value", 2.3))
-        } else {
-            rlTirePill.text = if (isConnected) "左后 2.3 bar" else "左后 — bar"
-        }
-
-        if (rrObj != null && rrObj.optBoolean("valid", false)) {
-            applyTireState(rrTirePill, "右后", rrObj.optDouble("value", 2.3))
-        } else {
-            rrTirePill.text = if (isConnected) "右后 2.3 bar" else "右后 — bar"
-        }
+        flChip.update("左前", flVal, isConnected)
+        frChip.update("右前", frVal, isConnected)
+        rlChip.update("左后", rlVal, isConnected)
+        rrChip.update("右后", rrVal, isConnected)
 
         // 3. Doors & Trunk
         val df = fields.optJSONObject("doorFrontLeft")?.optBoolean("value", false) ?: false
@@ -242,24 +280,13 @@ class VehicleCardView @JvmOverloads constructor(
         val isAuto = climate.optBoolean("auto", false)
         val isPower = climate.optBoolean("power", true)
         if (isPower) {
-            climateSummaryView.text = "空调: %.1f°C | %s | 风量 %d".format(
+            climateSummaryView.text = "空调: %.1f°C · %s · 风量 %d".format(
                 leftTemp,
                 if (isAuto) "AUTO" else "MANUAL",
                 fan
             )
         } else {
             climateSummaryView.text = "空调: 已关闭"
-        }
-    }
-
-    private fun applyTireState(pill: TextView, label: String, bar: Double) {
-        pill.text = "%s %.1f bar".format(label, bar)
-        if (bar in 2.0..2.7) {
-            pill.setBackgroundResource(R.drawable.bg_pill_badge)
-            pill.setTextColor(Color.WHITE)
-        } else {
-            pill.setBackgroundResource(R.drawable.bg_pill_badge_warning)
-            pill.setTextColor(Color.parseColor("#FFFF5722"))
         }
     }
 

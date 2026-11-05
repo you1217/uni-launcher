@@ -146,7 +146,7 @@ class EditableCardView @JvmOverloads constructor(
     private fun updateGlowColor() {
         glowColor = when (card.type) {
             "vehicle", "body" -> Color.parseColor("#38FFB057") // Warm Amber
-            "music" -> Color.parseColor("#36FF5FA8")   // Nocturne Pink
+            "music" -> Color.parseColor("#343BE2C0")   // Nocturne Mint
             "trafficLight" -> Color.parseColor("#363BE2C0") // Mint Green
             "climate" -> Color.parseColor("#346FD3FF") // Cyan
             "clockWeather" -> Color.parseColor("#348E6CFF") // Violet

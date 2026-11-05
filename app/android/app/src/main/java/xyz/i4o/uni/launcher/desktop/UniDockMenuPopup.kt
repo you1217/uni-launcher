@@ -100,7 +100,7 @@ class UniDockMenuPopup(private val context: Context) : PopupWindow(context) {
         return LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundResource(R.drawable.bg_control_circle)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(10f)
             setPadding(p, p, p, p)
             layoutParams = LinearLayout.LayoutParams(
