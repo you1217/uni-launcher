@@ -1,6 +1,7 @@
 package xyz.i4o.uni.launcher.desktop
 
 import android.annotation.SuppressLint
+import android.content.ClipData
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -14,13 +15,15 @@ import androidx.core.content.ContextCompat
 import xyz.i4o.uni.launcher.R
 
 /**
- * 1:1 Nocturne-styled glass card container for UNI Launcher.
+ * 1:1 Nocturne-styled glass card container for UNI Launcher with Edit Mode support.
  *
  * Features:
  * - 24dp rounded corners clipped directly via hardware RenderNode
  * - Dark-glass base with delicate 1dp edge highlight (#26FFFFFF)
  * - Card-type-specific bottom ambient glow (RadialGradient)
  * - Anti-intercept resize handle with 48dp touch hot-zone
+ * - Top-right Delete Button (visible in edit mode)
+ * - Long-press to trigger desktop Edit Mode
  */
 class EditableCardView @JvmOverloads constructor(
     context: Context,
@@ -35,10 +38,20 @@ class EditableCardView @JvmOverloads constructor(
             updateLayoutParamsFromCard()
         }
 
+    var isEditMode: Boolean = false
+        set(value) {
+            field = value
+            deleteBtn.visibility = if (value) View.VISIBLE else View.GONE
+            invalidate()
+        }
+
     var onCardResized: ((LauncherCard) -> Unit)? = null
+    var onCardDeleted: ((LauncherCard) -> Unit)? = null
+    var onCardLongClick: ((LauncherCard) -> Unit)? = null
 
     val contentView: FrameLayout
     private val resizeHandle: ImageView
+    private val deleteBtn: ImageView
 
     private val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -78,6 +91,23 @@ class EditableCardView @JvmOverloads constructor(
         contentView = FrameLayout(context)
         addView(contentView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
 
+        // Delete button at top-right corner
+        deleteBtn = ImageView(context).apply {
+            setImageResource(R.drawable.ic_delete_card)
+            val btnSize = dpToPx(24f)
+            val lp = LayoutParams(btnSize, btnSize).apply {
+                gravity = Gravity.TOP or Gravity.END
+                topMargin = dpToPx(8f)
+                rightMargin = dpToPx(8f)
+            }
+            layoutParams = lp
+            visibility = View.GONE
+            setOnClickListener {
+                onCardDeleted?.invoke(card)
+            }
+        }
+        addView(deleteBtn)
+
         // Resize handle at bottom-right corner
         resizeHandle = ImageView(context).apply {
             setImageResource(R.drawable.ic_resize_handle)
@@ -91,15 +121,31 @@ class EditableCardView @JvmOverloads constructor(
         }
         addView(resizeHandle)
 
+        setOnLongClickListener {
+            if (isEditMode) {
+                val clipData = ClipData.newPlainText("cardId", card.id)
+                val shadow = DragShadowBuilder(this)
+                startDragAndDrop(clipData, shadow, card, 0)
+                true
+            } else {
+                onCardLongClick?.invoke(card)
+                true
+            }
+        }
+
         setWillNotDraw(false)
     }
 
     private fun updateGlowColor() {
         glowColor = when (card.type) {
-            "vehicle" -> Color.parseColor("#38FFB057") // Warm Amber
-            "media" -> Color.parseColor("#36FF5FA8")   // Nocturne Pink
-            "traffic" -> Color.parseColor("#363BE2C0") // Mint Green
-            "apps", "apps_full" -> Color.parseColor("#308E6CFF") // Violet
+            "vehicle", "body" -> Color.parseColor("#38FFB057") // Warm Amber
+            "music" -> Color.parseColor("#36FF5FA8")   // Nocturne Pink
+            "trafficLight" -> Color.parseColor("#363BE2C0") // Mint Green
+            "climate" -> Color.parseColor("#346FD3FF") // Cyan
+            "clockWeather" -> Color.parseColor("#348E6CFF") // Violet
+            "fuel" -> Color.parseColor("#363BE2C0")
+            "calendar" -> Color.parseColor("#346FD3FF")
+            "shortcuts", "apps", "apps_full" -> Color.parseColor("#308E6CFF") // Violet
             else -> Color.parseColor("#283BE2C0")
         }
         invalidate()
@@ -135,8 +181,8 @@ class EditableCardView @JvmOverloads constructor(
         // 3. Delicate 1dp border
         val offset = borderPaint.strokeWidth / 2f
         val rect = RectF(offset, offset, w - offset, h - offset)
-        if (isResizing) {
-            borderPaint.color = Color.parseColor("#9964B5F6")
+        if (isResizing || isEditMode) {
+            borderPaint.color = Color.parseColor("#B364B5F6")
             borderPaint.strokeWidth = dpToPx(1.5f).toFloat()
         } else {
             borderPaint.color = Color.parseColor("#26FFFFFF")

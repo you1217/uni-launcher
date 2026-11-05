@@ -35,6 +35,8 @@ data class LauncherCard(
     }
 
     companion object {
+        fun fromJson(json: JSONObject): LauncherCard = fromJsonObject(json)
+
         fun fromJsonObject(json: JSONObject): LauncherCard {
             return LauncherCard(
                 id = json.optString("id", java.util.UUID.randomUUID().toString()),

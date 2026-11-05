@@ -1,14 +1,21 @@
 package xyz.i4o.uni.launcher.desktop
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.DashPathEffect
+import android.graphics.Paint
+import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.DragEvent
 import android.view.View
 import android.view.ViewGroup
 
 /**
- * High-performance 8x4 Grid ViewGroup for Lynk & Co 1920x1080 display.
+ * High-performance 12x6 Grid ViewGroup for Lynk & Co 1920x1080 display.
  *
  * Measured directly via RenderThread-accelerated coordinates with 0 overdraw.
+ * Supports native drag-and-drop cell reordering with live placement shadow.
  */
 class DesktopGridLayout @JvmOverloads constructor(
     context: Context,
@@ -16,19 +23,19 @@ class DesktopGridLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
-    var columns: Int = 8
+    var columns: Int = 12
         set(value) {
             field = value
             requestLayout()
         }
 
-    var rows: Int = 4
+    var rows: Int = 6
         set(value) {
             field = value
             requestLayout()
         }
 
-    var cellGap: Int = dpToPx(16f)
+    var cellGap: Int = dpToPx(14f)
         set(value) {
             field = value
             requestLayout()
@@ -40,11 +47,79 @@ class DesktopGridLayout @JvmOverloads constructor(
     var cellHeight: Int = 0
         private set
 
+    var onCardDropped: ((card: LauncherCard, targetCol: Int, targetRow: Int) -> Unit)? = null
+    private var dropHighlightRect: RectF? = null
+
+    private val highlightStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = dpToPx(2f).toFloat()
+        color = Color.parseColor("#64B5F6")
+        pathEffect = DashPathEffect(floatArrayOf(dpToPx(8f).toFloat(), dpToPx(6f).toFloat()), 0f)
+    }
+
+    private val highlightFillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = Color.parseColor("#3364B5F6")
+    }
+
     init {
         // Default desktop padding
         val horizontalPad = dpToPx(24f)
         val verticalPad = dpToPx(16f)
         setPadding(horizontalPad, verticalPad, horizontalPad, verticalPad)
+        setWillNotDraw(false)
+
+        setOnDragListener { _, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    true
+                }
+                DragEvent.ACTION_DRAG_LOCATION -> {
+                    val card = event.localState as? LauncherCard
+                    if (card != null && cellWidth > 0 && cellHeight > 0) {
+                        val cellW = cellWidth + cellGap
+                        val cellH = cellHeight + cellGap
+                        val col = ((event.x - paddingLeft) / cellW).toInt().coerceIn(0, (columns - card.w).coerceAtLeast(0))
+                        val row = ((event.y - paddingTop) / cellH).toInt().coerceIn(0, (rows - card.h).coerceAtLeast(0))
+                        val l = paddingLeft + col * cellW.toFloat()
+                        val t = paddingTop + row * cellH.toFloat()
+                        val w = (cellWidth * card.w + cellGap * (card.w - 1)).toFloat()
+                        val h = (cellHeight * card.h + cellGap * (card.h - 1)).toFloat()
+                        dropHighlightRect = RectF(l, t, l + w, t + h)
+                        invalidate()
+                    }
+                    true
+                }
+                DragEvent.ACTION_DROP -> {
+                    val card = event.localState as? LauncherCard
+                    if (card != null && cellWidth > 0 && cellHeight > 0) {
+                        val cellW = cellWidth + cellGap
+                        val cellH = cellHeight + cellGap
+                        val col = ((event.x - paddingLeft) / cellW).toInt().coerceIn(0, (columns - card.w).coerceAtLeast(0))
+                        val row = ((event.y - paddingTop) / cellH).toInt().coerceIn(0, (rows - card.h).coerceAtLeast(0))
+                        onCardDropped?.invoke(card, col, row)
+                    }
+                    dropHighlightRect = null
+                    invalidate()
+                    true
+                }
+                DragEvent.ACTION_DRAG_ENDED, DragEvent.ACTION_DRAG_EXITED -> {
+                    dropHighlightRect = null
+                    invalidate()
+                    true
+                }
+                else -> true
+            }
+        }
+    }
+
+    override fun dispatchDraw(canvas: Canvas) {
+        super.dispatchDraw(canvas)
+        dropHighlightRect?.let { r ->
+            val radius = dpToPx(24f).toFloat()
+            canvas.drawRoundRect(r, radius, radius, highlightFillPaint)
+            canvas.drawRoundRect(r, radius, radius, highlightStrokePaint)
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
