@@ -22,6 +22,7 @@ import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.i4o.uni.launcher.LauncherRuntime
+import xyz.i4o.uni.launcher.MainActivity
 import xyz.i4o.uni.launcher.R
 import java.util.*
 
@@ -124,6 +125,29 @@ class AllAppsCenterDialog(
         filterGroup.addView(tabUser)
         filterGroup.addView(tabSystem)
         header.addView(filterGroup)
+
+        val settingsBtn = TextView(context).apply {
+            text = "⚙️ 桌面设置"
+            setTextColor(Color.WHITE)
+            textSize = 12f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setBackgroundResource(R.drawable.bg_pill_badge)
+            val hp = dpToPx(12f)
+            val vp = dpToPx(6f)
+            setPadding(hp, vp, hp, vp)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                marginEnd = dpToPx(10f)
+            }
+            setOnClickListener {
+                dismiss()
+                (context as? MainActivity)?.showDesktopSettings()
+            }
+        }
+        header.addView(settingsBtn)
 
         // Close Button
         val closeBtn = TextView(context).apply {

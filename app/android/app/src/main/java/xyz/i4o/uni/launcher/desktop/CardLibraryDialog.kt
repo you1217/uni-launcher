@@ -59,16 +59,31 @@ class CardLibraryDialog(
             )
         }
 
+        val scroll = android.widget.ScrollView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dpToPx(520f)
+            )
+            isVerticalScrollBarEnabled = false
+        }
+
         val catalog = listOf(
-            Triple("🚗 车辆状态", "vehicle", "领克05立体车身与四轮胎压"),
-            Triple("🚘 车身诊断", "body", "车门车窗开闭与俯视车身"),
+            Triple("🗺️ 实时地图导航", "nav", "高德地图车机版真画中画嵌入与实时路况"),
+            Triple("🚗 车辆状态", "vehicle", "领克立体车身、车速与保养里程"),
+            Triple("🚘 车身诊断", "body", "车门车窗开闭与四轮胎压透视"),
             Triple("❄️ 智能空调", "climate", "双温区温控、风量与座椅加热"),
             Triple("🎵 音乐播放", "music", "旋转黑胶唱片与全功能控制"),
             Triple("🚦 高德红绿灯", "trafficLight", "实时路口绿波与变色倒计时"),
-            Triple("⏰ 时钟与天气", "clockWeather", "大字时钟与气象空气质量"),
+            Triple("⏰ 时钟与天气", "clockWeather", "大字时钟与气象空气质量组合"),
             Triple("📅 日历日程", "calendar", "月份日历、农历节气与行车备忘"),
             Triple("📱 常用应用", "shortcuts", "自选高频车载应用启动网格"),
-            Triple("⛽ 燃油续航", "fuel", "剩余油量百分比与续航里程")
+            Triple("⛽ 燃油续航", "fuel", "剩余油量百分比与燃油续航"),
+            Triple("⚡ 动力电池", "battery", "PHEV/EV电量、能量流与充电状态"),
+            Triple("🍃 车内空气", "air", "PM2.5、AQS阻隔与CleanZone净化"),
+            Triple("🧹 系统清理", "cleanup", "运存实时占用与一键释放加速"),
+            Triple("🕒 极简时钟", "clock", "极简大字时钟、动态秒跳与农历"),
+            Triple("☀️ 独立天气", "weather", "城市定位、今日气象与多日预报"),
+            Triple("👑 领克账号", "member", "Co-Club尊享会员与车主权益中心")
         )
 
         for ((title, type, desc) in catalog) {
@@ -109,7 +124,8 @@ class CardLibraryDialog(
             }
             grid.addView(item, param)
         }
-        root.addView(grid)
+        scroll.addView(grid)
+        root.addView(scroll)
 
         // Close Button
         val closeBtn = TextView(context).apply {

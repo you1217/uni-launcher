@@ -66,6 +66,18 @@ class WorkspacePagerAdapter(
                 onCardLongClick = {
                     onEnterEditMode()
                 }
+                onCardClickInEditMode = { clickedCard ->
+                    CardEditorDialog(
+                        context,
+                        clickedCard,
+                        onSave = { newTitle, newW, newH ->
+                            layoutManager.updateCardProperties(clickedCard.id, newTitle, newW, newH)
+                        },
+                        onDelete = {
+                            layoutManager.removeCard(clickedCard.id)
+                        }
+                    ).show()
+                }
             }
             grid.addView(editable)
         }
@@ -76,13 +88,20 @@ class WorkspacePagerAdapter(
 
     private fun createCardContent(type: String): View {
         return when (type) {
+            "nav" -> EmbeddedNavCardView(context)
             "vehicle" -> VehicleCardView(context)
             "body" -> BodyDiagnosticsCardView(context)
             "music" -> MediaCardView(context)
             "trafficLight" -> TrafficLightCardView(context)
             "climate" -> ClimateCardView(context)
-            "clockWeather", "clock" -> ClockWeatherCardView(context)
-            "fuel", "battery" -> FuelCardView(context)
+            "clockWeather" -> ClockWeatherCardView(context)
+            "fuel" -> FuelCardView(context)
+            "battery" -> BatteryPowerCardView(context)
+            "air" -> AirQualityCardView(context)
+            "cleanup" -> SystemCleanupCardView(context)
+            "clock" -> SoloClockCardView(context)
+            "weather" -> SoloWeatherCardView(context)
+            "member" -> MemberAccountCardView(context)
             "calendar" -> CalendarCardView(context)
             "shortcuts", "apps", "apps_full" -> AppGridCardView(context)
             else -> AppGridCardView(context)
@@ -99,6 +118,7 @@ class WorkspacePagerAdapter(
 
         for (v in activeCards) {
             when (v) {
+                is EmbeddedNavCardView -> v.updateSnapshot(snapshot)
                 is VehicleCardView -> v.updateTelemetry(vehicle, climate)
                 is BodyDiagnosticsCardView -> v.updateTelemetry(vehicle)
                 is MediaCardView -> v.updateMedia(media)
@@ -106,6 +126,8 @@ class WorkspacePagerAdapter(
                 is ClimateCardView -> v.updateFromTelemetry(climate)
                 is ClockWeatherCardView -> v.updateWeather(weather)
                 is FuelCardView -> v.updateTelemetry(vehicle)
+                is AirQualityCardView -> v.updateTelemetry(vehicle)
+                is BatteryPowerCardView -> v.updateTelemetry(vehicle)
             }
         }
     }

@@ -32,12 +32,7 @@ class DesktopLayoutManager private constructor(private val context: Context) {
                         val card = LauncherCard.fromJson(cJson)
                         // Normalize types
                         val normalizedType = when (card.type) {
-                            "nav", "tpms" -> "vehicle"
-                            "body" -> "body"
-                            "calendar" -> "calendar"
-                            "air" -> "climate"
-                            "clock" -> "clockWeather"
-                            "battery" -> "fuel"
+                            "tpms" -> "vehicle"
                             "apps", "apps_full" -> "shortcuts"
                             else -> card.type
                         }
@@ -85,10 +80,13 @@ class DesktopLayoutManager private constructor(private val context: Context) {
 
     fun addCard(type: String, targetPage: Int): LauncherCard? {
         val defaultSize = when (type) {
+            "nav" -> Pair(7, 6)
             "vehicle" -> Pair(7, 6)
             "body" -> Pair(5, 4)
             "music", "climate", "clockWeather" -> Pair(5, 3)
             "trafficLight", "fuel", "calendar" -> Pair(5, 3)
+            "battery", "air", "cleanup" -> Pair(5, 3)
+            "clock", "weather", "member" -> Pair(5, 3)
             "shortcuts" -> Pair(6, 2)
             else -> Pair(4, 2)
         }
@@ -105,15 +103,22 @@ class DesktopLayoutManager private constructor(private val context: Context) {
         }
 
         val title = when (type) {
+            "nav" -> "地图导航"
             "vehicle" -> "车辆状态"
             "body" -> "车身诊断"
-            "music" -> "多媒体"
+            "music" -> "音乐播放"
             "climate" -> "智能空调"
             "clockWeather" -> "时钟天气"
-            "trafficLight" -> "红绿灯"
+            "trafficLight" -> "高德红绿灯"
             "shortcuts" -> "常用应用"
             "fuel" -> "燃油续航"
             "calendar" -> "日历日程"
+            "battery" -> "动力电池"
+            "air" -> "车内空气"
+            "cleanup" -> "系统清理"
+            "clock" -> "极简时钟"
+            "weather" -> "独立天气"
+            "member" -> "领克账号"
             else -> "扩展卡片"
         }
 
@@ -146,6 +151,25 @@ class DesktopLayoutManager private constructor(private val context: Context) {
         card.w = w
         card.h = h
         saveLayout()
+    }
+
+    fun updateCardProperties(cardId: String, title: String, w: Int, h: Int) {
+        val index = cards.indexOfFirst { it.id == cardId }
+        if (index == -1) return
+        val card = cards[index]
+        val safeW = w.coerceIn(2, 12)
+        val safeH = h.coerceIn(1, 6)
+        val safeX = card.x.coerceIn(0, 12 - safeW)
+        val safeY = card.y.coerceIn(0, 6 - safeH)
+        cards[index] = card.copy(
+            title = title,
+            w = safeW,
+            h = safeH,
+            x = safeX,
+            y = safeY
+        )
+        saveLayout()
+        onLayoutChanged?.invoke()
     }
 
     fun updateCardPosition(cardId: String, x: Int, y: Int) {

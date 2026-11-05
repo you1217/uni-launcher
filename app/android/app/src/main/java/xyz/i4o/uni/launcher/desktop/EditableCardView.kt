@@ -48,6 +48,7 @@ class EditableCardView @JvmOverloads constructor(
     var onCardResized: ((LauncherCard) -> Unit)? = null
     var onCardDeleted: ((LauncherCard) -> Unit)? = null
     var onCardLongClick: ((LauncherCard) -> Unit)? = null
+    var onCardClickInEditMode: ((LauncherCard) -> Unit)? = null
 
     val contentView: FrameLayout
     private val resizeHandle: ImageView
@@ -120,6 +121,12 @@ class EditableCardView @JvmOverloads constructor(
             layoutParams = lp
         }
         addView(resizeHandle)
+
+        setOnClickListener {
+            if (isEditMode) {
+                onCardClickInEditMode?.invoke(card)
+            }
+        }
 
         setOnLongClickListener {
             if (isEditMode) {
