@@ -3,6 +3,7 @@ package xyz.i4o.uni.launcher
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,16 +12,20 @@ import androidx.viewpager2.widget.ViewPager2
 import org.json.JSONObject
 import xyz.i4o.uni.launcher.desktop.AllAppsCenterDialog
 import xyz.i4o.uni.launcher.desktop.CardLibraryDialog
+import xyz.i4o.uni.launcher.desktop.ClimateControlBottomSheet
 import xyz.i4o.uni.launcher.desktop.DesktopLayoutManager
 import xyz.i4o.uni.launcher.desktop.DesktopPageIndicator
 import xyz.i4o.uni.launcher.desktop.DesktopSettingsDialog
+import xyz.i4o.uni.launcher.desktop.FullOemDockView
+import xyz.i4o.uni.launcher.desktop.WeatherForecastDialog
 import xyz.i4o.uni.launcher.desktop.WorkspacePagerAdapter
 
 /**
  * Native Android View + RenderThread Launcher Activity for Lynk & Co 05.
  *
  * Direct hardware RenderNode rendering, 16ms touch responsiveness,
- * and full modular freedom (Card Library, Add/Delete, Dynamic savedDesign).
+ * Dual-dock architecture (Floating Capsule / Full OEM Dock),
+ * Steering wheel key intercept, and full modular freedom.
  */
 class MainActivity : AppCompatActivity() {
 
@@ -32,7 +37,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var topSystemStatus: TextView
     private lateinit var wallpaperImageView: ImageView
     private lateinit var desktopPageIndicator: DesktopPageIndicator
+    private lateinit var dockContainer: View
+    private lateinit var fullOemDockView: FullOemDockView
     private var currentWallpaper: String = "graphite_night"
+    private var currentDockStyle: String = "floating"
 
     private val cursor = LauncherRuntime.StaticCursor()
 
@@ -47,9 +55,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         wallpaperImageView = findViewById(R.id.wallpaperImageView)
-        val savedWallpaper = getSharedPreferences("launcher_settings", Context.MODE_PRIVATE)
-            .getString("wallpaper", "graphite_night") ?: "graphite_night"
+        val prefs = getSharedPreferences("launcher_settings", Context.MODE_PRIVATE)
+        val savedWallpaper = prefs.getString("wallpaper", "graphite_night") ?: "graphite_night"
         applyWallpaper(savedWallpaper)
+
+        dockContainer = findViewById(R.id.dockContainer)
+        fullOemDockView = findViewById(R.id.fullOemDockView)
+        currentDockStyle = prefs.getString("dock_style", "floating") ?: "floating"
+        applyDockStyle(currentDockStyle)
 
         runtime = LauncherRuntime.get(this)
         layoutManager = DesktopLayoutManager.getInstance(this)
@@ -61,6 +74,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         topWeatherText = findViewById(R.id.topWeatherText)
+        topWeatherText.setOnClickListener {
+            WeatherForecastDialog(this).show()
+        }
         topSystemStatus = findViewById(R.id.topSystemStatus)
 
         initWorkspace()
@@ -96,7 +112,75 @@ class MainActivity : AppCompatActivity() {
             setEditMode(false)
             return
         }
-        super.onBackPressed()
+        if (viewPager.currentItem > 0) {
+            navigateToPage(0)
+            return
+        }
+        // If already at page 0, retain launcher in foreground without finishing
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            when (event.keyCode) {
+                KeyEvent.KEYCODE_MEDIA_NEXT -> {
+                    sendAction("next")
+                    return true
+                }
+                KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
+                    sendAction("previous")
+                    return true
+                }
+                KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
+                KeyEvent.KEYCODE_MEDIA_PLAY,
+                KeyEvent.KEYCODE_MEDIA_PAUSE,
+                KeyEvent.KEYCODE_HEADSETHOOK -> {
+                    sendAction("toggle-play")
+                    return true
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
+    fun navigateToPage(index: Int) {
+        if (index in 0 until layoutManager.getPageCount()) {
+            viewPager.setCurrentItem(index, true)
+        }
+    }
+
+    fun showDesktopSettings() {
+        DesktopSettingsDialog(
+            context = this,
+            currentWallpaper = currentWallpaper,
+            currentDockStyle = currentDockStyle,
+            onWallpaperSelected = { wp ->
+                applyWallpaper(wp)
+            },
+            onDockStyleChanged = { style ->
+                applyDockStyle(style)
+            },
+            onEnterEditMode = {
+                setEditMode(true)
+            },
+            onResetLayout = {
+                layoutManager.resetToDefault()
+            }
+        ).show()
+    }
+
+    fun applyDockStyle(style: String) {
+        currentDockStyle = style
+        getSharedPreferences("launcher_settings", Context.MODE_PRIVATE)
+            .edit()
+            .putString("dock_style", style)
+            .apply()
+        if (::workspaceAdapter.isInitialized && workspaceAdapter.isEditMode) {
+            dockContainer.visibility = View.GONE
+            fullOemDockView.visibility = View.GONE
+        } else {
+            dockContainer.visibility = if (style == "floating") View.VISIBLE else View.GONE
+            fullOemDockView.visibility = if (style == "full_oem") View.VISIBLE else View.GONE
+        }
     }
 
     private fun applyImmersiveMode() {
@@ -149,19 +233,7 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.dockSettingsBtn).apply {
             setOnClickListener {
-                DesktopSettingsDialog(
-                    context = this@MainActivity,
-                    currentWallpaper = currentWallpaper,
-                    onWallpaperSelected = { wp ->
-                        applyWallpaper(wp)
-                    },
-                    onEnterEditMode = {
-                        setEditMode(true)
-                    },
-                    onResetLayout = {
-                        layoutManager.resetToDefault()
-                    }
-                ).show()
+                showDesktopSettings()
             }
             setOnLongClickListener {
                 setEditMode(true)
@@ -200,7 +272,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setEditMode(editing: Boolean) {
         workspaceAdapter.isEditMode = editing
-        findViewById<View>(R.id.dockContainer).visibility = if (editing) View.GONE else View.VISIBLE
+        if (editing) {
+            dockContainer.visibility = View.GONE
+            fullOemDockView.visibility = View.GONE
+        } else {
+            applyDockStyle(currentDockStyle)
+        }
         findViewById<View>(R.id.editBarContainer).visibility = if (editing) View.VISIBLE else View.GONE
         if (::desktopPageIndicator.isInitialized) {
             desktopPageIndicator.visibility = if (editing || layoutManager.getPageCount() <= 1) View.GONE else View.VISIBLE

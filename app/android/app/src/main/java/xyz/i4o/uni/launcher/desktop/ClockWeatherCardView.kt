@@ -72,6 +72,11 @@ class ClockWeatherCardView @JvmOverloads constructor(
             orientation = VERTICAL
             gravity = Gravity.CENTER_VERTICAL
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
+            isClickable = true
+            isFocusable = true
+            setOnClickListener {
+                WeatherForecastDialog(context).show()
+            }
         }
 
         val topRow = LinearLayout(context).apply {

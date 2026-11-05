@@ -273,6 +273,13 @@
             </LinearLayout>
         </FrameLayout>
 
+        <!-- Full-Width OEM Dock Bar -->
+        <xyz.i4o.uni.launcher.desktop.FullOemDockView
+            android:id="@+id/fullOemDockView"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:visibility="gone" />
+
         <!-- Bottom Floating Edit Mode Bar -->
         <FrameLayout
             android:id="@+id/editBarContainer"

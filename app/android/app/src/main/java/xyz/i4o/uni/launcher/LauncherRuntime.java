@@ -84,6 +84,10 @@ public final class LauncherRuntime {
         });
     }
 
+    public MediaAdapter getMedia() { return media; }
+    public LanTransfer getTransfer() { return transfer; }
+    public VehicleTelemetry getVehicle() { return vehicle; }
+
     private LauncherRuntime(Context application){
         long traceStart=android.os.SystemClock.uptimeMillis();
         context=application;

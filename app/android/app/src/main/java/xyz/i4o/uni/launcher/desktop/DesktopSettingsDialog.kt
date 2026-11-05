@@ -9,20 +9,23 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import xyz.i4o.uni.launcher.R
 
 /**
  * 1:1 Nocturne-styled Desktop Settings Dialog.
- * Provides Wallpaper switching, Edit Mode trigger, Layout Reset, and System diagnostics.
+ * Provides Wallpaper switching, Dock Mode switching (Capsule / Full OEM),
+ * Edit Mode trigger, Layout Reset, LAN Wireless Transfer, and System diagnostics.
  */
 class DesktopSettingsDialog(
     context: Context,
     private var currentWallpaper: String,
+    private var currentDockStyle: String,
     private val onWallpaperSelected: (wallpaperKey: String) -> Unit,
+    private val onDockStyleChanged: (dockStyle: String) -> Unit,
     private val onEnterEditMode: () -> Unit,
     private val onResetLayout: () -> Unit
 ) : Dialog(context) {
@@ -31,13 +34,21 @@ class DesktopSettingsDialog(
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+        val scroll = ScrollView(context).apply {
+            layoutParams = ViewGroup.LayoutParams(dpToPx(780f), dpToPx(560f))
+            setBackgroundResource(R.drawable.bg_card_glass)
+        }
+
         val root = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundResource(R.drawable.bg_card_glass)
             val pad = dpToPx(24f)
             setPadding(pad, pad, pad, pad)
-            layoutParams = ViewGroup.LayoutParams(dpToPx(760f), ViewGroup.LayoutParams.WRAP_CONTENT)
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
+        scroll.addView(root)
 
         // 1. Header with Close Button
         val header = LinearLayout(context).apply {
@@ -62,7 +73,7 @@ class DesktopSettingsDialog(
         }
 
         val subTitleView = TextView(context).apply {
-            text = "管理桌面壁纸、自由卡片排版与车载系统设置"
+            text = "管理桌面壁纸、底栏形态、无线快传与卡片排版"
             setTextColor(Color.parseColor("#99FFFFFF"))
             textSize = 13f
             setPadding(0, dpToPx(3f), 0, 0)
@@ -89,7 +100,7 @@ class DesktopSettingsDialog(
             setTextColor(Color.parseColor("#64B5F6"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
-            setPadding(0, dpToPx(20f), 0, dpToPx(10f))
+            setPadding(0, dpToPx(16f), 0, dpToPx(10f))
         }
         root.addView(wpSectionTitle)
 
@@ -124,7 +135,7 @@ class DesktopSettingsDialog(
                 val thumb = ImageView(context).apply {
                     setImageResource(wpThumb)
                     scaleType = ImageView.ScaleType.CENTER_CROP
-                    layoutParams = LinearLayout.LayoutParams(dpToPx(180f), dpToPx(70f))
+                    layoutParams = LinearLayout.LayoutParams(dpToPx(180f), dpToPx(64f))
                     clipToOutline = true
                 }
 
@@ -149,15 +160,79 @@ class DesktopSettingsDialog(
         }
         root.addView(wpGrid)
 
-        // 3. Layout Actions Section
-        val layoutSectionTitle = TextView(context).apply {
-            text = "📐 桌面布局与自由度"
+        // 3. Dock Mode Selection Section
+        val dockSectionTitle = TextView(context).apply {
+            text = "🎛️ 底栏形态风格 (双模架构)"
             setTextColor(Color.parseColor("#64B5F6"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
-            setPadding(0, dpToPx(20f), 0, dpToPx(10f))
+            setPadding(0, dpToPx(18f), 0, dpToPx(10f))
         }
-        root.addView(layoutSectionTitle)
+        root.addView(dockSectionTitle)
+
+        val dockGrid = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val dockStyles = listOf(
+            Pair("极简悬浮胶囊 (Floating)", "floating"),
+            Pair("原厂全功能底栏 (Full OEM)", "full_oem")
+        )
+
+        for ((dockTitle, dockKey) in dockStyles) {
+            val isSelected = (dockKey == currentDockStyle)
+            val dockCard = LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER_HORIZONTAL
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                    setMargins(dpToPx(6f), 0, dpToPx(6f), 0)
+                }
+                setBackgroundResource(if (isSelected) R.drawable.bg_control_circle_accent else R.drawable.bg_pill_badge)
+                val p = dpToPx(12f)
+                setPadding(p, p, p, p)
+                isClickable = true
+                isFocusable = true
+
+                val label = TextView(context).apply {
+                    text = if (isSelected) "🔘 $dockTitle (生效中)" else "⚪ $dockTitle"
+                    setTextColor(if (isSelected) Color.parseColor("#3BE2C0") else Color.WHITE)
+                    textSize = 13f
+                    typeface = if (isSelected) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+                }
+
+                val desc = TextView(context).apply {
+                    text = if (dockKey == "floating") "6 键独立半透明悬浮胶囊，视觉轻盈" else "全宽原厂风格：常驻主副驾温控 + 音乐工具条 + 返回"
+                    setTextColor(Color.parseColor("#80FFFFFF"))
+                    textSize = 11f
+                    setPadding(0, dpToPx(4f), 0, 0)
+                }
+
+                addView(label)
+                addView(desc)
+
+                setOnClickListener {
+                    currentDockStyle = dockKey
+                    onDockStyleChanged(dockKey)
+                    dismiss()
+                }
+            }
+            dockGrid.addView(dockCard)
+        }
+        root.addView(dockGrid)
+
+        // 4. Layout & Wireless Transfer Section
+        val toolsSectionTitle = TextView(context).apply {
+            text = "🛠️ 桌面排版与车机互联"
+            setTextColor(Color.parseColor("#64B5F6"))
+            textSize = 14f
+            typeface = Typeface.DEFAULT_BOLD
+            setPadding(0, dpToPx(18f), 0, dpToPx(10f))
+        }
+        root.addView(toolsSectionTitle)
 
         val actionRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -167,12 +242,12 @@ class DesktopSettingsDialog(
             )
         }
 
-        val btnHeight = dpToPx(48f)
+        val btnHeight = dpToPx(44f)
 
         val editModeBtn = TextView(context).apply {
-            text = "📐 进入卡片自由编辑模式"
+            text = "📐 卡片自由编辑"
             setTextColor(Color.WHITE)
-            textSize = 14f
+            textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             setBackgroundResource(R.drawable.bg_pill_badge)
@@ -184,10 +259,25 @@ class DesktopSettingsDialog(
             }
         }
 
+        val lanTransferBtn = TextView(context).apply {
+            text = "📲 手机无线快传"
+            setTextColor(Color.parseColor("#3BE2C0"))
+            textSize = 13f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setBackgroundResource(R.drawable.bg_pill_badge)
+            isClickable = true
+            isFocusable = true
+            setOnClickListener {
+                dismiss()
+                LanTransferDialog(context).show()
+            }
+        }
+
         val resetLayoutBtn = TextView(context).apply {
-            text = "🔄 恢复原厂出厂默认布局"
+            text = "🔄 恢复原厂布局"
             setTextColor(Color.parseColor("#FFFF5722"))
-            textSize = 14f
+            textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             setBackgroundResource(R.drawable.bg_pill_badge)
@@ -199,24 +289,22 @@ class DesktopSettingsDialog(
             }
         }
 
-        val lp1 = LinearLayout.LayoutParams(0, btnHeight, 1f).apply {
-            marginEnd = dpToPx(8f)
-        }
-        val lp2 = LinearLayout.LayoutParams(0, btnHeight, 1f).apply {
-            marginStart = dpToPx(8f)
-        }
+        val lp1 = LinearLayout.LayoutParams(0, btnHeight, 1f).apply { marginEnd = dpToPx(6f) }
+        val lp2 = LinearLayout.LayoutParams(0, btnHeight, 1.2f).apply { marginStart = dpToPx(6f); marginEnd = dpToPx(6f) }
+        val lp3 = LinearLayout.LayoutParams(0, btnHeight, 1f).apply { marginStart = dpToPx(6f) }
 
         actionRow.addView(editModeBtn, lp1)
-        actionRow.addView(resetLayoutBtn, lp2)
+        actionRow.addView(lanTransferBtn, lp2)
+        actionRow.addView(resetLayoutBtn, lp3)
         root.addView(actionRow)
 
-        // 4. System Diagnostics Section
+        // 5. System Diagnostics Section
         val infoSectionTitle = TextView(context).apply {
             text = "⚡ 关于 UNI 原生极速引擎"
             setTextColor(Color.parseColor("#64B5F6"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
-            setPadding(0, dpToPx(20f), 0, dpToPx(8f))
+            setPadding(0, dpToPx(18f), 0, dpToPx(8f))
         }
         root.addView(infoSectionTitle)
 
@@ -253,7 +341,7 @@ class DesktopSettingsDialog(
         }
         root.addView(infoBox)
 
-        setContentView(root)
+        setContentView(scroll)
     }
 
     private fun dpToPx(dp: Float): Int {
@@ -261,4 +349,3 @@ class DesktopSettingsDialog(
         return (dp * density + 0.5f).toInt()
     }
 }
-

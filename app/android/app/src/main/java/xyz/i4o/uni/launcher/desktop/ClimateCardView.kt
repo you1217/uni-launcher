@@ -52,8 +52,28 @@ class ClimateCardView @JvmOverloads constructor(
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
+            setOnClickListener {
+                ClimateControlBottomSheet(context).show()
+            }
         }
         header.addView(titleView)
+
+        val detailBtn = TextView(context).apply {
+            text = "座椅/更多 ⚙️"
+            setTextColor(Color.parseColor("#64B5F6"))
+            textSize = 11f
+            setBackgroundResource(R.drawable.bg_pill_badge)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(3f)
+            setPadding(hp, vp, hp, vp)
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                marginEnd = dpToPx(6f)
+            }
+            setOnClickListener {
+                ClimateControlBottomSheet(context).show()
+            }
+        }
+        header.addView(detailBtn)
 
         val powerBtn = TextView(context).apply {
             text = "电源"
