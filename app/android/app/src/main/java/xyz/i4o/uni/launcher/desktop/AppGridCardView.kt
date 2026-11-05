@@ -77,10 +77,10 @@ class AppGridCardView @JvmOverloads constructor(
                 val name = TextView(context).apply {
                     text = label
                     setTextColor(Color.parseColor("#E6FFFFFF"))
-                    textSize = 11f
+                    textSize = 10f
                     gravity = Gravity.CENTER
                     setSingleLine(true)
-                    setPadding(0, dpToPx(4f), 0, 0)
+                    setPadding(0, dpToPx(3f), 0, 0)
                 }
 
                 addView(icon)

@@ -39,7 +39,8 @@ class TrafficLightCardView @JvmOverloads constructor(
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(10f), dpToPx(3f), dpToPx(10f), dpToPx(3f))
+            setPadding(dpToPx(12f), dpToPx(4f), dpToPx(12f), dpToPx(4f))
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         }
         addView(titleBadge)
 
@@ -61,8 +62,9 @@ class TrafficLightCardView @JvmOverloads constructor(
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(12f), dpToPx(4f), dpToPx(12f), dpToPx(4f))
+            setPadding(dpToPx(14f), dpToPx(5f), dpToPx(14f), dpToPx(5f))
             gravity = Gravity.CENTER
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         }
         addView(laneStatusPill)
 
