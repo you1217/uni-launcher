@@ -160,7 +160,7 @@ class BatteryPowerCardView @JvmOverloads constructor(
         }
 
         energyFlowDescView = TextView(context).apply {
-            text = "⚡ 驱动电机输出中"
+            text = "驱动电机输出中"
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 11f
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)

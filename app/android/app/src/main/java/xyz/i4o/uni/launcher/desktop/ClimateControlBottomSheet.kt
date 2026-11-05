@@ -100,7 +100,7 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             setBackgroundResource(R.drawable.bg_dock_item_glass)
-            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
+            layoutParams = LinearLayout.LayoutParams(dpToPx(40f), dpToPx(40f))
             setOnClickListener { dismiss() }
         }
         header.addView(closeBtn)
@@ -220,8 +220,8 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
 
         // 4. Seats Section: Driver (Heat 1-3, Vent 1-3) & Passenger (Heat 1-3)
         val seatTitle = TextView(context).apply {
-            text = "💺 领克 05 原车座椅舒适度控制"
-            setTextColor(Color.parseColor("#64B5F6"))
+            text = "座椅舒适度控制"
+            setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             setPadding(0, dpToPx(18f), 0, dpToPx(8f))
@@ -428,7 +428,7 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
 
         // Heat Row: 关 | 1档 | 2档 | 3档
         val heatLabel = TextView(context).apply {
-            text = "🔥 加热"
+            text = "加热"
             setTextColor(Color.parseColor("#FFB25C"))
             textSize = 11f
         }
@@ -463,7 +463,7 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
         // Vent Row (if supported)
         if (ventPills != null && onVentSelected != null) {
             val ventLabel = TextView(context).apply {
-                text = "❄️ 通风"
+                text = "通风"
                 setTextColor(Color.parseColor("#64C8FF"))
                 textSize = 11f
                 setPadding(0, dpToPx(8f), 0, 0)

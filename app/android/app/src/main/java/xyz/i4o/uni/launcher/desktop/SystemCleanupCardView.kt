@@ -111,13 +111,13 @@ class SystemCleanupCardView @JvmOverloads constructor(
 
         // Right side: One-tap Clean Button
         cleanBtn = TextView(context).apply {
-            text = "⚡ 一键加速"
+            text = "立即清理"
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             setBackgroundResource(R.drawable.bg_dock_pill_accent)
             val hp = dpToPx(16f)
-            val vp = dpToPx(9f)
+            val vp = dpToPx(8f)
             setPadding(hp, vp, hp, vp)
             isClickable = true
             isFocusable = true
@@ -143,7 +143,7 @@ class SystemCleanupCardView @JvmOverloads constructor(
 
         // 4. Footer Note
         val footer = TextView(context).apply {
-            text = "释放后台残留进程 · 保持车机桌面 60FPS 丝滑流畅"
+            text = "释放后台无用缓存 · 保持系统高效运行"
             setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
@@ -153,12 +153,12 @@ class SystemCleanupCardView @JvmOverloads constructor(
     }
 
     private fun performCleanup() {
-        cleanBtn.animate().scaleX(0.92f).scaleY(0.92f).setDuration(100).withEndAction {
+        cleanBtn.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100).withEndAction {
             cleanBtn.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
         }.start()
 
         System.gc()
-        Toast.makeText(context, "✨ 已释放后台残留缓存，运行内存保持充裕", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "已释放后台残留缓存", Toast.LENGTH_SHORT).show()
         postDelayed({ refreshMemoryStats(cleaned = true) }, 300)
     }
 

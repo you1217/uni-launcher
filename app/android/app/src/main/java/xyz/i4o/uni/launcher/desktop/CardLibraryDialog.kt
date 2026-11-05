@@ -35,22 +35,22 @@ class CardLibraryDialog(
     )
 
     private val catalog = listOf(
-        CardItemDef("🗺️ 实时地图导航", "nav", "高德地图车机版真画中画嵌入与实时路况", "7 × 6 黄金半屏", "nav"),
-        CardItemDef("🚗 车辆状态", "vehicle", "领克立体车身、车速与保养里程", "7 × 6", "vehicle"),
-        CardItemDef("🚘 车身诊断", "body", "车门车窗开闭与四轮胎压透视", "7 × 6", "vehicle"),
-        CardItemDef("⚡ 动力电池", "battery", "PHEV/EV电量、能量流与充电状态", "4 × 2", "vehicle"),
-        CardItemDef("⛽ 燃油续航", "fuel", "剩余油量百分比与燃油续航", "4 × 2", "vehicle"),
-        CardItemDef("❄️ 智能空调", "climate", "双温区温控、风量与座椅加热", "4 × 3", "cabin"),
-        CardItemDef("🎵 音乐播放", "music", "旋转黑胶唱片与全功能控制", "4 × 3", "cabin"),
-        CardItemDef("🍃 车内空气", "air", "PM2.5、AQS阻隔与CleanZone净化", "4 × 2", "cabin"),
-        CardItemDef("🚦 高德红绿灯", "trafficLight", "实时路口绿波与变色倒计时", "4 × 2", "nav"),
-        CardItemDef("⏰ 时钟与天气", "clockWeather", "大字时钟与气象空气质量组合", "4 × 2", "daily"),
-        CardItemDef("📅 日历日程", "calendar", "月份日历、农历节气与行车备忘", "4 × 2", "daily"),
-        CardItemDef("📱 常用应用", "shortcuts", "自选高频车载应用启动网格", "4 × 3", "daily"),
-        CardItemDef("🧹 系统清理", "cleanup", "运存实时占用与一键释放加速", "4 × 2", "daily"),
-        CardItemDef("🕒 极简时钟", "clock", "极简大字时钟、动态秒跳与农历", "4 × 2", "daily"),
-        CardItemDef("☀️ 独立天气", "weather", "城市定位、今日气象与多日预报", "4 × 2", "daily"),
-        CardItemDef("👑 领克账号", "member", "Co-Club尊享会员与车主权益中心", "4 × 2", "daily")
+        CardItemDef("实时地图导航", "nav", "高德地图车机版真画中画嵌入与实时路况", "7×6 黄金半屏", "nav"),
+        CardItemDef("车辆状态", "vehicle", "领克立体车身、车速与保养里程", "7×6", "vehicle"),
+        CardItemDef("车身诊断", "body", "车门车窗开闭与四轮胎压透视", "7×6", "vehicle"),
+        CardItemDef("动力电池", "battery", "PHEV/EV电量、能量流与充电状态", "4×2", "vehicle"),
+        CardItemDef("燃油续航", "fuel", "剩余油量百分比与燃油续航", "4×2", "vehicle"),
+        CardItemDef("智能空调", "climate", "双温区温控、风量与座椅加热", "4×3", "cabin"),
+        CardItemDef("音乐播放", "music", "旋转黑胶唱片与全功能控制", "4×3", "cabin"),
+        CardItemDef("车内空气", "air", "PM2.5、AQS阻隔与CleanZone净化", "4×2", "cabin"),
+        CardItemDef("高德红绿灯", "trafficLight", "实时路口绿波与变色倒计时", "4×2", "nav"),
+        CardItemDef("时钟与天气", "clockWeather", "大字时钟与气象空气质量组合", "4×2", "daily"),
+        CardItemDef("日历日程", "calendar", "月份日历、农历节气与行车备忘", "4×2", "daily"),
+        CardItemDef("常用应用", "shortcuts", "自选高频车载应用启动网格", "4×3", "daily"),
+        CardItemDef("系统清理", "cleanup", "运存实时占用与后台缓存释放", "4×2", "daily"),
+        CardItemDef("极简时钟", "clock", "极简大字时钟、动态秒跳与农历", "4×2", "daily"),
+        CardItemDef("独立天气", "weather", "城市定位、今日气象与多日预报", "4×2", "daily"),
+        CardItemDef("领克账号", "member", "Co-Club尊享会员与车主权益中心", "4×2", "daily")
     )
 
     private val filterButtons = mutableListOf<TextView>()
@@ -85,16 +85,16 @@ class CardLibraryDialog(
         }
 
         val titleView = TextView(context).apply {
-            text = "➕ 添加卡片"
+            text = "添加卡片"
             setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 20f
             typeface = Typeface.DEFAULT_BOLD
         }
         val subTitleView = TextView(context).apply {
-            text = "原车卡片使用官方直连数据通道 · 统一暗夜玻璃质感与 60FPS 丝滑渲染"
+            text = "领克官方数据通道 · 硬件加速渲染"
             setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
-            setPadding(0, dpToPx(3f), 0, 0)
+            setPadding(0, dpToPx(4f), 0, 0)
         }
         titleCol.addView(titleView)
         titleCol.addView(subTitleView)
@@ -122,7 +122,7 @@ class CardLibraryDialog(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                topMargin = dpToPx(14f)
+                topMargin = dpToPx(16f)
                 bottomMargin = dpToPx(12f)
             }
         }
@@ -133,10 +133,10 @@ class CardLibraryDialog(
 
         val categories = listOf(
             Pair("all", "全部 (${catalog.size})"),
-            Pair("nav", "🗺️ 行车与导航"),
-            Pair("vehicle", "🚗 车身与能耗"),
-            Pair("cabin", "❄️ 智能座舱"),
-            Pair("daily", "⚡ 日常与效率")
+            Pair("nav", "行车与导航"),
+            Pair("vehicle", "车身与能耗"),
+            Pair("cabin", "智能座舱"),
+            Pair("daily", "日常与效率")
         )
 
         for ((catId, label) in categories) {
@@ -154,7 +154,7 @@ class CardLibraryDialog(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 ).apply {
-                    rightMargin = dpToPx(10f)
+                    rightMargin = dpToPx(8f)
                 }
                 isClickable = true
                 isFocusable = true

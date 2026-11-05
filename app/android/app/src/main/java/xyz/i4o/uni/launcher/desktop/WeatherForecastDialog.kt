@@ -69,7 +69,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             setBackgroundResource(R.drawable.bg_dock_item_glass)
-            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
+            layoutParams = LinearLayout.LayoutParams(dpToPx(40f), dpToPx(40f))
             setOnClickListener { dismiss() }
         }
         header.addView(closeBtn)
@@ -139,7 +139,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
 
         // 3. 24-Hour Trend Strip
         val trendTitle = TextView(context).apply {
-            text = "⏰ 24 小时气温与天气走势"
+            text = "24 小时气温与天气走势"
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
@@ -160,13 +160,13 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
         }
 
         val hourlyData = listOf(
-            Triple("现在", "18°", "☀️ 晴"),
-            Triple("12:00", "21°", "☀️ 晴"),
-            Triple("14:00", "22°", "⛅ 多云"),
-            Triple("16:00", "20°", "⛅ 多云"),
-            Triple("18:00", "17°", "☁️ 阴"),
-            Triple("20:00", "15°", "☁️ 阴"),
-            Triple("22:00", "14°", "🌙 晴")
+            Triple("现在", "18°", "晴"),
+            Triple("12:00", "21°", "晴"),
+            Triple("14:00", "22°", "多云"),
+            Triple("16:00", "20°", "多云"),
+            Triple("18:00", "17°", "阴"),
+            Triple("20:00", "15°", "阴"),
+            Triple("22:00", "14°", "晴夜")
         )
 
         for ((hour, temp, cond) in hourlyData) {
@@ -208,7 +208,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
 
         // 4. 3-Day Forecast Strip
         val futureTitle = TextView(context).apply {
-            text = "📅 未来 3 天天气预测"
+            text = "未来 3 天气象趋势"
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
@@ -224,9 +224,9 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
         }
 
         val days = listOf(
-            Triple("今天 · 11月5日", "☀️ 晴朗", "12°C ~ 22°C · 空气优"),
-            Triple("明天 · 11月6日", "⛅ 多云转阴", "13°C ~ 21°C · 空气良"),
-            Triple("后天 · 11月7日", "🌧️ 局部小雨", "11°C ~ 18°C · 空气优")
+            Triple("今天 · 11月5日", "晴朗", "12°C ~ 22°C · 空气优"),
+            Triple("明天 · 11月6日", "多云转阴", "13°C ~ 21°C · 空气良"),
+            Triple("后天 · 11月7日", "局部小雨", "11°C ~ 18°C · 空气优")
         )
 
         for ((day, weather, info) in days) {

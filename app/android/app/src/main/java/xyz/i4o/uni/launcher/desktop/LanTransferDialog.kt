@@ -76,17 +76,17 @@ class LanTransferDialog(context: Context) : Dialog(context) {
         }
 
         val titleView = TextView(context).apply {
-            text = "📲 手机无线快传"
+            text = "无线快传"
             setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 20f
             typeface = Typeface.DEFAULT_BOLD
         }
 
         val subTitleView = TextView(context).apply {
-            text = "免数据线高速传输 · 支持无损音乐、壁纸与 APK 安装包"
+            text = "局域网高速传输 · 支持无损音乐、壁纸与应用安装包"
             setTextColor(Color.parseColor("#8A99AD"))
             textSize = 13f
-            setPadding(0, dpToPx(3f), 0, 0)
+            setPadding(0, dpToPx(4f), 0, 0)
         }
 
         titleCol.addView(titleView)
@@ -100,8 +100,9 @@ class LanTransferDialog(context: Context) : Dialog(context) {
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             setBackgroundResource(R.drawable.bg_dock_item_glass)
-            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
+            layoutParams = LinearLayout.LayoutParams(dpToPx(40f), dpToPx(40f))
             isClickable = true
+            isFocusable = true
             setOnClickListener { dismiss() }
         }
         header.addView(closeBtn)
@@ -232,7 +233,7 @@ class LanTransferDialog(context: Context) : Dialog(context) {
         }
 
         val listHeader = TextView(context).apply {
-            text = "📁 已接收文件与传输队列"
+            text = "已接收文件与传输队列"
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
@@ -330,7 +331,7 @@ class LanTransferDialog(context: Context) : Dialog(context) {
                     name = name,
                     tag = "链接任务",
                     tagColor = "#FFB25C",
-                    info = if (isDownloading) "正在下载到车机..." else "待下载",
+                    info = if (isDownloading) "正在下载到车机" else "待下载",
                     actionPrimaryLabel = if (isDownloading) "下载中" else "下载",
                     onPrimaryAction = if (isDownloading) null else {
                         {

@@ -262,7 +262,7 @@ class MainActivity : AppCompatActivity() {
         val isDemo = runtime.prefs().getBoolean("demo", false)
         val message = buildString {
             append("【当前环境状态】: ")
-            append(if (isDemo) "🧪 模拟器仿真演示模式\n\n" else "🚗 官方实车CAN直连模式\n\n")
+            append(if (isDemo) "模拟器仿真演示模式\n\n" else "官方实车CAN直连模式\n\n")
             append("• 为什么模拟器中有模拟数据？\n")
             append("本车机系统运行在 PC Android Studio 模拟器中，电脑缺少吉利/领克 05 原车的 CAN 总线与 ECARX 硬件层。\n")
             append("为了确保 16 种卡片、底部一体 Dock 栏、双区空调调节、胎压监测与媒体动效能够正常预览交互，系统已内置高质量演示数据（520km 续航、85% 电量、2.4 bar 胎压、向海而行音乐与 22.0°C 双区空调）。\n\n")
@@ -271,7 +271,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         AlertDialog.Builder(this)
-            .setTitle("🧪 车机运行环境与数据诊断")
+            .setTitle("车机运行环境与数据诊断")
             .setMessage(message)
             .setPositiveButton(if (isDemo) "尝试切换为实车直连" else "恢复模拟器演示数据") { _, _ ->
                 val newDemo = !isDemo

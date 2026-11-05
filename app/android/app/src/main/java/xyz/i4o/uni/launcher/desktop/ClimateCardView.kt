@@ -59,7 +59,7 @@ class ClimateCardView @JvmOverloads constructor(
         header.addView(titleView)
 
         val detailBtn = TextView(context).apply {
-            text = "座椅/更多 ⚙️"
+            text = "座椅/更多"
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD

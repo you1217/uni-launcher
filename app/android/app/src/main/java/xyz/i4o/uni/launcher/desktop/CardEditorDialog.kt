@@ -57,7 +57,7 @@ class CardEditorDialog(
         }
 
         val titleView = TextView(context).apply {
-            text = "⚙️ 编辑卡片 · ${card.title}"
+            text = "编辑卡片 · ${card.title}"
             setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 18f
             typeface = Typeface.DEFAULT_BOLD
@@ -71,8 +71,9 @@ class CardEditorDialog(
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             setBackgroundResource(R.drawable.bg_dock_item_glass)
-            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
+            layoutParams = LinearLayout.LayoutParams(dpToPx(40f), dpToPx(40f))
             isClickable = true
+            isFocusable = true
             setOnClickListener { dismiss() }
         }
 
@@ -123,10 +124,10 @@ class CardEditorDialog(
         }
 
         val presets = listOf(
-            Triple("4 × 2 紧凑横条", 4, 2),
-            Triple("4 × 3 标准卡片", 4, 3),
-            Triple("4 × 4 正方中卡", 4, 4),
-            Triple("7 × 6 黄金半屏", 7, 6)
+            Triple("4×2 紧凑", 4, 2),
+            Triple("4×3 标准", 4, 3),
+            Triple("4×4 中卡", 4, 4),
+            Triple("7×6 半屏", 7, 6)
         )
 
         val presetButtons = mutableListOf<TextView>()
@@ -146,7 +147,7 @@ class CardEditorDialog(
                     setBackgroundResource(R.drawable.bg_dock_item_glass)
                 }
                 val hp = dpToPx(10f)
-                val vp = dpToPx(10f)
+                val vp = dpToPx(8f)
                 setPadding(hp, vp, hp, vp)
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                     setMargins(dpToPx(4f), 0, dpToPx(4f), 0)
@@ -155,7 +156,7 @@ class CardEditorDialog(
                 setOnClickListener {
                     currentW = w
                     currentH = h
-                    sizeLabel.text = "网格尺寸预设 (已选: $w × $h)"
+                    sizeLabel.text = "网格尺寸预设 (已选: ${w}×${h})"
                     for (b in presetButtons) {
                         b.setTextColor(Color.parseColor("#8A99AD"))
                         b.setBackgroundResource(R.drawable.bg_dock_item_glass)
@@ -182,13 +183,13 @@ class CardEditorDialog(
         }
 
         val deleteBtn = TextView(context).apply {
-            text = "🗑️ 移除此卡片"
+            text = "移除卡片"
             setTextColor(Color.parseColor("#FF5E62"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             setBackgroundResource(R.drawable.bg_dock_item_glass)
             val hp = dpToPx(16f)
-            val vp = dpToPx(10f)
+            val vp = dpToPx(8f)
             setPadding(hp, vp, hp, vp)
             isClickable = true
             setOnClickListener {

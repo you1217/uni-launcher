@@ -155,18 +155,18 @@ class DesktopSettingsDialog(
         }
 
         val tabs = listOf(
-            Triple("appearance", "🎨", "外观与壁纸"),
-            Triple("dock", "🎛️", "应用与底栏"),
-            Triple("nav_media", "🗺️", "导航与媒体"),
-            Triple("motion", "⚡", "动画与性能"),
-            Triple("ambient", "💡", "氛围灯联动"),
-            Triple("system", "📶", "系统与互传"),
-            Triple("about", "ℹ️", "关于与诊断")
+            Pair("appearance", "外观与壁纸"),
+            Pair("dock", "应用与底栏"),
+            Pair("nav_media", "导航与媒体"),
+            Pair("motion", "动画与性能"),
+            Pair("ambient", "氛围灯联动"),
+            Pair("system", "系统与互传"),
+            Pair("about", "关于与诊断")
         )
 
-        for ((id, icon, label) in tabs) {
+        for ((id, label) in tabs) {
             val tabItem = TextView(context).apply {
-                text = "$icon  $label"
+                text = label
                 textSize = 14f
                 typeface = Typeface.DEFAULT_BOLD
                 val hp = dpToPx(16f)
@@ -176,7 +176,7 @@ class DesktopSettingsDialog(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 ).apply {
-                    bottomMargin = dpToPx(6f)
+                    bottomMargin = dpToPx(4f)
                 }
                 isClickable = true
                 isFocusable = true
@@ -253,7 +253,7 @@ class DesktopSettingsDialog(
             orientation = LinearLayout.VERTICAL
         }
 
-        root.addView(createSectionHeader("🎨 原厂暗夜壁纸切换", "针对领克中控屏幕调优的暗夜高对比度壁纸"))
+        root.addView(createSectionHeader("原厂壁纸", "高对比度暗夜车机壁纸"))
 
         val wpScroll = HorizontalScrollView(context).apply {
             layoutParams = LinearLayout.LayoutParams(
@@ -267,11 +267,11 @@ class DesktopSettingsDialog(
         }
 
         val wallpapers = listOf(
-            Triple("bg_starry", "🌌 动态星空", "#1A237E"),
-            Triple("bg_aurora", "✨ 极光夜色", "#004D40"),
-            Triple("bg_obsidian", "🖤 暗夜黑耀", "#121721"),
-            Triple("bg_titanium", "🔘 极简钛银", "#263238"),
-            Triple("bg_pure_black", "🌑 纯黑省电", "#000000")
+            Triple("bg_starry", "动态星空", "#1A237E"),
+            Triple("bg_aurora", "极光夜色", "#004D40"),
+            Triple("bg_obsidian", "暗夜黑耀", "#121721"),
+            Triple("bg_titanium", "极简钛银", "#263238"),
+            Triple("bg_pure_black", "纯黑省电", "#000000")
         )
 
         for ((key, name, colorHex) in wallpapers) {
@@ -312,11 +312,11 @@ class DesktopSettingsDialog(
         wpScroll.addView(wpRow)
         root.addView(wpScroll)
 
-        root.addView(createSectionHeader("🔲 卡片圆角弧度", "硬核机能方角 vs 豪华圆角玻璃"))
+        root.addView(createSectionHeader("卡片圆角", "微曲玻璃与硬朗直角风格切换"))
         val cornerRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
         }
-        val cornerOptions = listOf("16dp 紧凑", "24dp 原厂推荐", "32dp 极度圆润")
+        val cornerOptions = listOf("紧凑 (16dp)", "标准 (24dp)", "大圆角 (32dp)")
         for ((idx, opt) in cornerOptions.withIndex()) {
             val btn = createFilterPill(opt, idx == 1) {
                 Toast.makeText(context, "已设置卡片圆角: $opt", Toast.LENGTH_SHORT).show()
@@ -325,15 +325,15 @@ class DesktopSettingsDialog(
         }
         root.addView(cornerRow)
 
-        root.addView(createSectionHeader("📐 桌面排版模式", "高自由度网格微调"))
+        root.addView(createSectionHeader("桌面排版", "网格布局与卡片管理"))
         val layoutRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
         }
-        val editBtn = createActionButton("✏️ 进入桌面自由编辑模式") {
+        val editBtn = createActionButton("进入自由编辑") {
             dismiss()
             onEnterEditMode()
         }
-        val resetBtn = createActionButton("🔄 恢复默认卡片布局") {
+        val resetBtn = createActionButton("恢复默认布局") {
             onResetLayout()
             Toast.makeText(context, "已重置为原厂出厂卡片排版", Toast.LENGTH_SHORT).show()
         }
@@ -352,18 +352,18 @@ class DesktopSettingsDialog(
             orientation = LinearLayout.VERTICAL
         }
 
-        root.addView(createSectionHeader("🎛️ 底栏形态切换", "双模式底栏自由切换"))
+        root.addView(createSectionHeader("底栏形态", "双模式底栏切换"))
 
         val dockRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
         }
         val isFullOem = currentDockStyle == "full_oem"
-        val fullOemBtn = createFilterPill("🚘 原车一体化全功能底栏", isFullOem) {
+        val fullOemBtn = createFilterPill("原车一体化底栏", isFullOem) {
             currentDockStyle = "full_oem"
             onDockStyleChanged("full_oem")
             selectTab("dock")
         }
-        val capsuleBtn = createFilterPill("💊 极简悬浮胶囊底栏", !isFullOem) {
+        val capsuleBtn = createFilterPill("极简悬浮胶囊", !isFullOem) {
             currentDockStyle = "floating"
             onDockStyleChanged("floating")
             selectTab("dock")
@@ -372,11 +372,11 @@ class DesktopSettingsDialog(
         dockRow.addView(capsuleBtn)
         root.addView(dockRow)
 
-        root.addView(createSectionHeader("❄️ 空调步进使能", "底栏直接轻触 [+] [-] 调整主副驾温度"))
+        root.addView(createSectionHeader("空调温控步进", "底栏直接轻触 [+] [-] 调整主副驾温度"))
         val acSwitch = createSwitchRow("启用底栏即时温控步进", "无需展开空调面板，单次点击调整 0.5°C", true)
         root.addView(acSwitch)
 
-        root.addView(createSectionHeader("📷 360全景快捷键", "底栏相机图标一键唤起车载全景影像"))
+        root.addView(createSectionHeader("全景影像快捷键", "底栏相机图标唤起车载全景影像"))
         val camRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -394,7 +394,7 @@ class DesktopSettingsDialog(
             orientation = LinearLayout.VERTICAL
         }
 
-        root.addView(createSectionHeader("🗺️ 桌面实时导航画中画", "高德地图车机版真画中画深度嵌入"))
+        root.addView(createSectionHeader("导航画中画", "高德地图车机版真画中画深度嵌入"))
         val navModeRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -405,7 +405,7 @@ class DesktopSettingsDialog(
         val autoPipSwitch = createSwitchRow("开机自动嵌入导航", "启动桌面时若检测到路线则自动进入桌面小地图", true)
         root.addView(autoPipSwitch)
 
-        root.addView(createSectionHeader("🎵 车载多媒体源", "多源媒体元数据直连获取"))
+        root.addView(createSectionHeader("车载多媒体源", "多源媒体元数据直连获取"))
         val mediaRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -428,7 +428,7 @@ class DesktopSettingsDialog(
             orientation = LinearLayout.VERTICAL
         }
 
-        root.addView(createSectionHeader("⚡ 渲染性能与硬件加速", "领克车机硬件极速优化"))
+        root.addView(createSectionHeader("渲染性能与硬件加速", "领克车机硬件加速优化"))
         val renderRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -436,18 +436,18 @@ class DesktopSettingsDialog(
         renderRow.addView(createFilterPill("内存占用极低守护 (<40MB)", true) {})
         root.addView(renderRow)
 
-        root.addView(createSectionHeader("⏱️ 车况数据刷新频率", "CAN总线与状态报文同步间隔"))
+        root.addView(createSectionHeader("数据刷新频率", "CAN总线与状态报文同步间隔"))
         val pollRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
         }
-        pollRow.addView(createFilterPill("200ms 极速高刷新", true) {})
+        pollRow.addView(createFilterPill("200ms 高刷新", true) {})
         pollRow.addView(createFilterPill("500ms 均衡", false) {})
         pollRow.addView(createFilterPill("1000ms 节能", false) {})
         root.addView(pollRow)
 
-        val cleanBtn = createActionButton("🧹 立即释放后台残留运存") {
+        val cleanBtn = createActionButton("立即释放后台缓存") {
             System.gc()
-            Toast.makeText(context, "✨ 运存已释放，车机 RenderThread 保持丝滑", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "已释放后台缓存", Toast.LENGTH_SHORT).show()
         }
         root.addView(cleanBtn)
 
@@ -462,7 +462,7 @@ class DesktopSettingsDialog(
             orientation = LinearLayout.VERTICAL
         }
 
-        root.addView(createSectionHeader("💡 车载多色氛围灯直连", "支持领克 05 / 01 / 03 / 08 原厂氛围灯协议"))
+        root.addView(createSectionHeader("原厂多色氛围灯", "支持领克 05 / 01 / 03 / 08 原厂氛围灯协议"))
 
         val colorRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -538,14 +538,14 @@ class DesktopSettingsDialog(
             orientation = LinearLayout.VERTICAL
         }
 
-        root.addView(createSectionHeader("📶 无线局域网快传", "无需数据线，手机与电脑一键免密上传 APK 与壁纸"))
-        val lanBtn = createActionButton("📲 打开局域网扫码传输 (8787服务)") {
+        root.addView(createSectionHeader("无线文件快传", "无需数据线，手机与电脑局域网高速传输 APK 与壁纸"))
+        val lanBtn = createActionButton("打开扫码传输 (端口 8787)") {
             dismiss()
             LanTransferDialog(context).show()
         }
         root.addView(lanBtn)
 
-        root.addView(createSectionHeader("🚗 方向盘与系统键映射", "物理按键深度适配"))
+        root.addView(createSectionHeader("方向盘与实体键映射", "物理按键深度适配"))
         val steerSwitch = createSwitchRow("领克多功能方向盘切歌键拦截", "映射上一曲、下一曲与播放暂停按键", true)
         root.addView(steerSwitch)
 
@@ -563,7 +563,7 @@ class DesktopSettingsDialog(
             orientation = LinearLayout.VERTICAL
         }
 
-        root.addView(createSectionHeader("ℹ️ 版本与运行状态", "领克车机官方认证重构版"))
+        root.addView(createSectionHeader("版本与运行状态", "领克车机官方认证重构版"))
 
         val infoCol = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -579,7 +579,7 @@ class DesktopSettingsDialog(
         infoCol.addView(createInfoLine("当前帧率", "60.0 FPS (硬件加速)"))
         root.addView(infoCol)
 
-        root.addView(createSectionHeader("🧪 运行环境与传感器仿真", "在电脑模拟器与实车CAN直连之间无缝切换"))
+        root.addView(createSectionHeader("运行环境与传感器仿真", "在电脑模拟器与实车CAN直连之间无缝切换"))
         val demoCol = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             setBackgroundResource(R.drawable.bg_pill_badge)
@@ -635,8 +635,8 @@ class DesktopSettingsDialog(
         }
         root.addView(demoCol)
 
-        root.addView(createSectionHeader("🛠️ 维护与导出", "诊断与数据重置"))
-        val resetBtn = createActionButton("🔄 恢复桌面出厂初始布局") {
+        root.addView(createSectionHeader("维护与重置", "诊断与数据重置"))
+        val resetBtn = createActionButton("恢复出厂布局") {
             onResetLayout()
             Toast.makeText(context, "桌面已重置为原厂初始状态", Toast.LENGTH_SHORT).show()
         }

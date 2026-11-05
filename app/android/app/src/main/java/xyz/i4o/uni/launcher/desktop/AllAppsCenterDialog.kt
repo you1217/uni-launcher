@@ -84,7 +84,7 @@ class AllAppsCenterDialog(
 
         // Search Input Box
         val searchBox = EditText(context).apply {
-            hint = "🔍 搜索车载应用..."
+            hint = "搜索车载应用"
             setHintTextColor(Color.parseColor("#4D8A99AD"))
             setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 13f
@@ -127,7 +127,7 @@ class AllAppsCenterDialog(
         header.addView(filterGroup)
 
         val settingsBtn = TextView(context).apply {
-            text = "⚙️ 桌面设置"
+            text = "桌面设置"
             setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
@@ -140,7 +140,7 @@ class AllAppsCenterDialog(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                marginEnd = dpToPx(10f)
+                marginEnd = dpToPx(8f)
             }
             setOnClickListener {
                 dismiss()
@@ -157,7 +157,7 @@ class AllAppsCenterDialog(
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             setBackgroundResource(R.drawable.bg_dock_item_glass)
-            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
+            layoutParams = LinearLayout.LayoutParams(dpToPx(40f), dpToPx(40f))
             setOnClickListener { dismiss() }
         }
         header.addView(closeBtn)
@@ -300,8 +300,8 @@ class AllAppsCenterDialog(
 
     private fun showAppContextMenu(app: AppEntry) {
         val menu = PopupMenu(context, null)
-        menu.menu.add(0, 1, 0, "➕ 添加到桌面卡片")
-        menu.menu.add(0, 2, 1, "ℹ️ 应用详情")
+        menu.menu.add(0, 1, 0, "添加到桌面")
+        menu.menu.add(0, 2, 1, "应用详情")
 
         menu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -347,7 +347,7 @@ class AllAppsCenterDialog(
                 addView(t)
 
                 val b1 = TextView(context).apply {
-                    text = "➕ 添加到常用应用"
+                    text = "添加到常用应用"
                     setTextColor(Color.parseColor("#3BE2C0"))
                     textSize = 14f
                     setBackgroundResource(R.drawable.bg_pill_badge)

@@ -101,17 +101,17 @@ class TrafficLightCardView @JvmOverloads constructor(
                 when (status?.lowercase()) {
                     "green" -> {
                         countdownView.setTextColor(Color.parseColor("#3BE2C0")) // Mint
-                        laneStatusPill.text = "🟢 前方路口通行"
+                        laneStatusPill.text = "绿灯通行 · 建议车速 45~55 km/h"
                         laneStatusPill.setTextColor(Color.parseColor("#3BE2C0"))
                     }
                     "red" -> {
                         countdownView.setTextColor(Color.parseColor("#FF5252")) // Red
-                        laneStatusPill.text = "🔴 红灯等待中"
+                        laneStatusPill.text = "红灯等待 · 保持车距"
                         laneStatusPill.setTextColor(Color.parseColor("#FF8A80"))
                     }
                     else -> {
                         countdownView.setTextColor(Color.parseColor("#FFD54F")) // Yellow
-                        laneStatusPill.text = "🟡 黄灯注意缓行"
+                        laneStatusPill.text = "黄灯倒计时 · 注意缓行"
                         laneStatusPill.setTextColor(Color.parseColor("#FFE082"))
                     }
                 }

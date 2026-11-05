@@ -401,12 +401,12 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
         }
 
         val copyBtn = TextView(context).apply {
-            text = "📋 复制读取结果"
+            text = "复制遥测数据"
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             setBackgroundResource(R.drawable.bg_dock_item_glass)
-            setPadding(dpToPx(16f), dpToPx(9f), dpToPx(16f), dpToPx(9f))
+            setPadding(dpToPx(16f), dpToPx(8f), dpToPx(16f), dpToPx(8f))
             isClickable = true
             isFocusable = true
             setOnClickListener {
@@ -416,23 +416,23 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
         bar.addView(copyBtn)
 
         val refreshBtn = TextView(context).apply {
-            text = "🔄 刷新读取"
+            text = "刷新数据"
             setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             setBackgroundResource(R.drawable.bg_dock_item_glass)
-            setPadding(dpToPx(16f), dpToPx(9f), dpToPx(16f), dpToPx(9f))
+            setPadding(dpToPx(16f), dpToPx(8f), dpToPx(16f), dpToPx(8f))
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                marginStart = dpToPx(10f)
+                marginStart = dpToPx(8f)
             }
             isClickable = true
             isFocusable = true
             setOnClickListener {
                 sendAction("refresh")
-                Toast.makeText(context, "正在向车辆总线发起刷新...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "正在同步车辆数据", Toast.LENGTH_SHORT).show()
                 mainHandler.postDelayed({ refreshData() }, 400)
             }
         }
@@ -444,12 +444,12 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
         bar.addView(spacer)
 
         val openCarSettingsBtn = TextView(context).apply {
-            text = "🚗 打开原车设置"
+            text = "原车设置"
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             setBackgroundResource(R.drawable.bg_dock_pill_accent)
-            setPadding(dpToPx(18f), dpToPx(9f), dpToPx(18f), dpToPx(9f))
+            setPadding(dpToPx(18f), dpToPx(8f), dpToPx(18f), dpToPx(8f))
             isClickable = true
             isFocusable = true
             setOnClickListener {
@@ -523,9 +523,9 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
             // 4. Reason
             val reason = telemetry.optString("reason", "CAN总线通信正常")
             diagnosticReasonText.text = if (isDemo) {
-                "🧪 模拟器演示模式 (PC无实车CAN总线硬件) · 16项传感器处于全仿真交互状态"
+                "模拟器仿真环境 · 16项车载传感器处于数据测试状态"
             } else {
-                "🚗 官方实车CAN直连: $reason"
+                "领克官方实车 CAN 直连: $reason"
             }
         } catch (e: Exception) {
             e.printStackTrace()

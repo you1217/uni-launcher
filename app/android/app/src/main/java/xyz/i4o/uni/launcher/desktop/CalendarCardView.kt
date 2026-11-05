@@ -119,7 +119,7 @@ class CalendarCardView @JvmOverloads constructor(
 
         // 3. Travel Tip Bottom Row
         travelNoteView = TextView(context).apply {
-            text = "🚗 行车备忘: 全车胎压与油量充沛，适合舒适驾驶"
+            text = "行车备忘: 全车胎压与油量充沛，适合舒适驾驶"
             setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
             setPadding(0, dpToPx(6f), 0, 0)

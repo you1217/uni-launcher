@@ -64,11 +64,13 @@ class MemberAccountCardView @JvmOverloads constructor(
         }
 
         val avatar = TextView(context).apply {
-            text = "🏎️"
-            textSize = 30f
+            text = "05"
+            setTextColor(Color.parseColor("#3BE2C0"))
+            textSize = 18f
+            typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             setBackgroundResource(R.drawable.bg_dock_item_glass)
-            val s = dpToPx(52f)
+            val s = dpToPx(48f)
             layoutParams = LayoutParams(s, s)
         }
         contentRow.addView(avatar)

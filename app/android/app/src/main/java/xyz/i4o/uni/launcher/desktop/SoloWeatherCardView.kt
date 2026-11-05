@@ -39,7 +39,7 @@ class SoloWeatherCardView @JvmOverloads constructor(
         }
 
         cityView = TextView(context).apply {
-            text = "📍 杭州市 · 滨江区"
+            text = "杭州市 · 滨江区"
             setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
@@ -108,28 +108,21 @@ class SoloWeatherCardView @JvmOverloads constructor(
         tempCol.addView(tempRangeView)
         centerRow.addView(tempCol)
 
-        // Right side: Weather Big Condition
+        // Right side: Weather Condition Badge
         val condCol = LinearLayout(context).apply {
             orientation = VERTICAL
             gravity = Gravity.END or Gravity.CENTER_VERTICAL
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         }
 
-        val iconDesc = TextView(context).apply {
-            text = "☀️"
-            textSize = 34f
-            gravity = Gravity.END
-        }
-
         conditionDescView = TextView(context).apply {
             text = "晴朗"
-            setTextColor(Color.parseColor("#EFF4F6"))
-            textSize = 15f
+            setTextColor(Color.parseColor("#3BE2C0"))
+            textSize = 18f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.END
         }
 
-        condCol.addView(iconDesc)
         condCol.addView(conditionDescView)
         centerRow.addView(condCol)
 
@@ -144,7 +137,7 @@ class SoloWeatherCardView @JvmOverloads constructor(
             }
         }
 
-        val days = listOf("周五" to "⛅ 19°", "周六" to "🌧️ 16°", "周日" to "⛅ 18°", "周一" to "☀️ 20°")
+        val days = listOf("周五" to "多云 19°", "周六" to "小雨 16°", "周日" to "多云 18°", "周一" to "晴朗 20°")
         for ((d, w) in days) {
             val item = LinearLayout(context).apply {
                 orientation = VERTICAL
