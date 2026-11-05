@@ -79,13 +79,13 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
 
         val titleView = TextView(context).apply {
             text = "空调与座椅控制"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 20f
             typeface = Typeface.DEFAULT_BOLD
         }
         val subTitleView = TextView(context).apply {
             text = "领克 05 官方双温区温控 · 主副驾座椅加热与通风"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 13f
             setPadding(0, dpToPx(3f), 0, 0)
         }
@@ -95,12 +95,12 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
 
         val closeBtn = TextView(context).apply {
             text = "✕"
-            setTextColor(Color.parseColor("#99FFFFFF"))
-            textSize = 18f
+            setTextColor(Color.parseColor("#8A99AD"))
+            textSize = 16f
+            typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val p = dpToPx(8f)
-            setPadding(p * 2, p, p * 2, p)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
             setOnClickListener { dismiss() }
         }
         header.addView(closeBtn)
@@ -313,14 +313,14 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
     ): Pair<LinearLayout, TextView> {
         val card = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(12f)
             setPadding(p, p, p, p)
         }
 
         val headerText = TextView(context).apply {
             text = label
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
         }
         card.addView(headerText)
@@ -338,10 +338,10 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
 
         val minusBtn = TextView(context).apply {
             text = "－"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 20f
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val size = dpToPx(38f)
             layoutParams = LinearLayout.LayoutParams(size, size)
             isClickable = true
@@ -351,7 +351,7 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
 
         val valueView = TextView(context).apply {
             text = initialValue
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 22f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
@@ -360,10 +360,10 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
 
         val plusBtn = TextView(context).apply {
             text = "＋"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 20f
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val size = dpToPx(38f)
             layoutParams = LinearLayout.LayoutParams(size, size)
             isClickable = true
@@ -382,11 +382,11 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
     private fun createModePill(text: String, onClick: () -> Unit): TextView {
         return TextView(context).apply {
             this.text = text
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             isClickable = true
             isFocusable = true
             setOnClickListener { onClick() }
@@ -396,10 +396,10 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
     private fun updatePillState(pill: TextView, active: Boolean) {
         if (active) {
             pill.setTextColor(Color.parseColor("#3BE2C0"))
-            pill.setBackgroundResource(R.drawable.bg_control_circle_accent)
+            pill.setBackgroundResource(R.drawable.bg_dock_pill_accent)
         } else {
-            pill.setTextColor(Color.parseColor("#B3FFFFFF"))
-            pill.setBackgroundResource(R.drawable.bg_pill_badge)
+            pill.setTextColor(Color.parseColor("#8A99AD"))
+            pill.setBackgroundResource(R.drawable.bg_dock_item_glass)
         }
     }
 
@@ -412,14 +412,14 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
     ): LinearLayout {
         val card = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(12f)
             setPadding(p, p, p, p)
         }
 
         val titleView = TextView(context).apply {
             text = title
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             setPadding(0, 0, 0, dpToPx(8f))
@@ -448,7 +448,7 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
                 text = if (lvl == 0) "关" else "${lvl}档"
                 textSize = 11f
                 gravity = Gravity.CENTER
-                setBackgroundResource(R.drawable.bg_pill_badge)
+                setBackgroundResource(R.drawable.bg_dock_item_glass)
                 isClickable = true
                 isFocusable = true
                 setOnClickListener { onHeatSelected(lvl) }
@@ -484,7 +484,7 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
                     text = if (lvl == 0) "关" else "${lvl}档"
                     textSize = 11f
                     gravity = Gravity.CENTER
-                    setBackgroundResource(R.drawable.bg_pill_badge)
+                    setBackgroundResource(R.drawable.bg_dock_item_glass)
                     isClickable = true
                     isFocusable = true
                     setOnClickListener { onVentSelected(lvl) }
@@ -504,11 +504,11 @@ class ClimateControlBottomSheet(context: Context) : Dialog(context) {
         for ((idx, pill) in pills.withIndex()) {
             if (idx == activeLevel) {
                 pill.setTextColor(highlightColor)
-                pill.setBackgroundResource(R.drawable.bg_control_circle_accent)
+                pill.setBackgroundResource(R.drawable.bg_dock_pill_accent)
                 pill.typeface = Typeface.DEFAULT_BOLD
             } else {
-                pill.setTextColor(Color.parseColor("#99FFFFFF"))
-                pill.setBackgroundResource(R.drawable.bg_pill_badge)
+                pill.setTextColor(Color.parseColor("#8A99AD"))
+                pill.setBackgroundResource(R.drawable.bg_dock_item_glass)
                 pill.typeface = Typeface.DEFAULT
             }
         }

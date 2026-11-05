@@ -75,13 +75,13 @@ class DesktopSettingsDialog(
 
         val backBtn = TextView(context).apply {
             text = "←"
-            setTextColor(Color.WHITE)
-            textSize = 24f
+            setTextColor(Color.parseColor("#EFF4F6"))
+            textSize = 22f
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_control_circle)
-            val s = dpToPx(48f)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            val s = dpToPx(42f)
             layoutParams = LinearLayout.LayoutParams(s, s).apply {
-                rightMargin = dpToPx(18f)
+                rightMargin = dpToPx(16f)
             }
             isClickable = true
             isFocusable = true
@@ -95,14 +95,14 @@ class DesktopSettingsDialog(
 
         val titleText = TextView(context).apply {
             text = "桌面设置"
-            setTextColor(Color.WHITE)
-            textSize = 22f
+            setTextColor(Color.parseColor("#EFF4F6"))
+            textSize = 20f
             typeface = Typeface.DEFAULT_BOLD
         }
 
         val subtitleText = TextView(context).apply {
             text = "按分类管理外观壁纸、应用底栏、画中画导航、氛围灯与原车诊断"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
             setPadding(0, dpToPx(2f), 0, 0)
         }
@@ -114,14 +114,15 @@ class DesktopSettingsDialog(
 
         val closeTextBtn = TextView(context).apply {
             text = "完成设置"
-            setTextColor(Color.BLACK)
+            setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_control_circle_accent)
+            setBackgroundResource(R.drawable.bg_dock_pill_accent)
             val hp = dpToPx(18f)
             val vp = dpToPx(8f)
             setPadding(hp, vp, hp, vp)
             isClickable = true
+            isFocusable = true
             setOnClickListener { dismiss() }
         }
         topBar.addView(closeTextBtn)
@@ -212,10 +213,10 @@ class DesktopSettingsDialog(
         activeTabId = tabId
         for ((id, btn) in tabButtons) {
             if (id == tabId) {
-                btn.setTextColor(Color.BLACK)
-                btn.setBackgroundResource(R.drawable.bg_control_circle_accent)
+                btn.setTextColor(Color.parseColor("#3BE2C0"))
+                btn.setBackgroundResource(R.drawable.bg_dock_pill_accent)
             } else {
-                btn.setTextColor(Color.WHITE)
+                btn.setTextColor(Color.parseColor("#8A99AD"))
                 btn.setBackgroundColor(Color.TRANSPARENT)
             }
         }
@@ -694,10 +695,14 @@ class DesktopSettingsDialog(
     }
 
     private fun createSwitchRow(title: String, subtitle: String, defaultChecked: Boolean): View {
+        val sw = Switch(context).apply {
+            isChecked = defaultChecked
+            isClickable = false
+        }
         val row = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val hp = dpToPx(16f)
             val vp = dpToPx(12f)
             setPadding(hp, vp, hp, vp)
@@ -707,6 +712,11 @@ class DesktopSettingsDialog(
             ).apply {
                 bottomMargin = dpToPx(8f)
             }
+            isClickable = true
+            isFocusable = true
+            setOnClickListener {
+                sw.toggle()
+            }
         }
         val col = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -714,23 +724,19 @@ class DesktopSettingsDialog(
         }
         val t = TextView(context).apply {
             text = title
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
         }
         val s = TextView(context).apply {
             text = subtitle
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
             setPadding(0, dpToPx(2f), 0, 0)
         }
         col.addView(t)
         col.addView(s)
         row.addView(col)
-
-        val sw = Switch(context).apply {
-            isChecked = defaultChecked
-        }
         row.addView(sw)
         return row
     }
@@ -741,11 +747,11 @@ class DesktopSettingsDialog(
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             if (isSelected) {
-                setTextColor(Color.BLACK)
-                setBackgroundResource(R.drawable.bg_control_circle_accent)
+                setTextColor(Color.parseColor("#3BE2C0"))
+                setBackgroundResource(R.drawable.bg_dock_pill_accent)
             } else {
-                setTextColor(Color.WHITE)
-                setBackgroundResource(R.drawable.bg_pill_badge)
+                setTextColor(Color.parseColor("#8A99AD"))
+                setBackgroundResource(R.drawable.bg_dock_item_glass)
             }
             val hp = dpToPx(14f)
             val vp = dpToPx(8f)
@@ -765,10 +771,10 @@ class DesktopSettingsDialog(
     private fun createActionButton(label: String, onClick: () -> Unit): TextView {
         return TextView(context).apply {
             text = label
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val hp = dpToPx(16f)
             val vp = dpToPx(10f)
             setPadding(hp, vp, hp, vp)

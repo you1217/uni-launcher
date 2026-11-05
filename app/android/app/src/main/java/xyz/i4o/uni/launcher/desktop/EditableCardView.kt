@@ -189,7 +189,7 @@ class EditableCardView @JvmOverloads constructor(
         val offset = borderPaint.strokeWidth / 2f
         val rect = RectF(offset, offset, w - offset, h - offset)
         if (isResizing || isEditMode) {
-            borderPaint.color = Color.parseColor("#B364B5F6")
+            borderPaint.color = Color.parseColor("#993BE2C0")
             borderPaint.strokeWidth = dpToPx(1.5f).toFloat()
         } else {
             borderPaint.color = Color.parseColor("#26FFFFFF")

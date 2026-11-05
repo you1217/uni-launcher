@@ -126,13 +126,13 @@ class UniDockMenuPopup(private val context: Context) : PopupWindow(context) {
 
             val titleView = TextView(context).apply {
                 text = title
-                setTextColor(Color.WHITE)
+                setTextColor(Color.parseColor("#EFF4F6"))
                 textSize = 15f
                 typeface = Typeface.DEFAULT_BOLD
             }
             val subtitleView = TextView(context).apply {
                 text = subtitle
-                setTextColor(Color.parseColor("#80FFFFFF"))
+                setTextColor(Color.parseColor("#8A99AD"))
                 textSize = 11f
                 setPadding(0, dpToPx(2f), 0, 0)
             }
@@ -142,7 +142,7 @@ class UniDockMenuPopup(private val context: Context) : PopupWindow(context) {
 
             val arrow = TextView(context).apply {
                 text = "›"
-                setTextColor(Color.parseColor("#66FFFFFF"))
+                setTextColor(Color.parseColor("#8A99AD"))
                 textSize = 20f
                 typeface = Typeface.DEFAULT_BOLD
                 setPadding(dpToPx(6f), 0, dpToPx(4f), 0)

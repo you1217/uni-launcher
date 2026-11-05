@@ -41,7 +41,7 @@ class SystemCleanupCardView @JvmOverloads constructor(
 
         val titleView = TextView(context).apply {
             text = "系统清理"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -50,10 +50,11 @@ class SystemCleanupCardView @JvmOverloads constructor(
         val healthBadge = TextView(context).apply {
             text = "车机状态良好"
             setTextColor(Color.parseColor("#3BE2C0"))
-            textSize = 12f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val hp = dpToPx(10f)
-            val vp = dpToPx(4f)
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(3f)
             setPadding(hp, vp, hp, vp)
         }
 
@@ -91,7 +92,7 @@ class SystemCleanupCardView @JvmOverloads constructor(
 
         val pctUnit = TextView(context).apply {
             text = "% 运存占用"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 13f
             setPadding(dpToPx(4f), 0, 0, dpToPx(6f))
         }
@@ -102,7 +103,7 @@ class SystemCleanupCardView @JvmOverloads constructor(
 
         ramDetailView = TextView(context).apply {
             text = "已用 2.8 GB / 可用 3.2 GB"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
         leftCol.addView(ramDetailView)
@@ -111,12 +112,12 @@ class SystemCleanupCardView @JvmOverloads constructor(
         // Right side: One-tap Clean Button
         cleanBtn = TextView(context).apply {
             text = "⚡ 一键加速"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_control_circle_accent)
+            setBackgroundResource(R.drawable.bg_dock_pill_accent)
             val hp = dpToPx(16f)
-            val vp = dpToPx(10f)
+            val vp = dpToPx(9f)
             setPadding(hp, vp, hp, vp)
             isClickable = true
             isFocusable = true
@@ -132,6 +133,7 @@ class SystemCleanupCardView @JvmOverloads constructor(
             isIndeterminate = false
             max = 100
             progress = 48
+            progressDrawable = androidx.core.content.ContextCompat.getDrawable(context, R.drawable.progress_bar_mint)
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, dpToPx(6f)).apply {
                 topMargin = dpToPx(4f)
                 bottomMargin = dpToPx(8f)
@@ -142,7 +144,7 @@ class SystemCleanupCardView @JvmOverloads constructor(
         // 4. Footer Note
         val footer = TextView(context).apply {
             text = "释放后台残留进程 · 保持车机桌面 60FPS 丝滑流畅"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
         addView(footer)

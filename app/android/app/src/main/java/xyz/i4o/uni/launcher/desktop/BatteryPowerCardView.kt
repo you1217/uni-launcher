@@ -43,7 +43,7 @@ class BatteryPowerCardView @JvmOverloads constructor(
 
         titleView = TextView(context).apply {
             text = "动力电池"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -52,10 +52,11 @@ class BatteryPowerCardView @JvmOverloads constructor(
         driveModeBadge = TextView(context).apply {
             text = "智能混动"
             setTextColor(Color.parseColor("#3BE2C0"))
-            textSize = 12f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val hp = dpToPx(10f)
-            val vp = dpToPx(4f)
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(3f)
             setPadding(hp, vp, hp, vp)
         }
 
@@ -93,7 +94,7 @@ class BatteryPowerCardView @JvmOverloads constructor(
 
         val unitView = TextView(context).apply {
             text = "%"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 16f
             setPadding(dpToPx(2f), 0, 0, dpToPx(6f))
         }
@@ -104,7 +105,7 @@ class BatteryPowerCardView @JvmOverloads constructor(
 
         val socSub = TextView(context).apply {
             text = "高压动力电池电量"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
         socCol.addView(socSub)
@@ -119,14 +120,14 @@ class BatteryPowerCardView @JvmOverloads constructor(
 
         val rangeLabel = TextView(context).apply {
             text = "纯电续航"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
             gravity = Gravity.END
         }
 
         electricRangeView = TextView(context).apply {
             text = "88 km"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 20f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.END
@@ -144,6 +145,7 @@ class BatteryPowerCardView @JvmOverloads constructor(
             isIndeterminate = false
             max = 100
             progress = 85
+            progressDrawable = androidx.core.content.ContextCompat.getDrawable(context, R.drawable.progress_bar_mint)
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, dpToPx(6f)).apply {
                 topMargin = dpToPx(4f)
                 bottomMargin = dpToPx(8f)
@@ -166,7 +168,7 @@ class BatteryPowerCardView @JvmOverloads constructor(
 
         chargeStatusView = TextView(context).apply {
             text = "充电口已锁止"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
 

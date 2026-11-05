@@ -53,13 +53,13 @@ class DesktopGridLayout @JvmOverloads constructor(
     private val highlightStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = dpToPx(2f).toFloat()
-        color = Color.parseColor("#64B5F6")
+        color = Color.parseColor("#3BE2C0")
         pathEffect = DashPathEffect(floatArrayOf(dpToPx(8f).toFloat(), dpToPx(6f).toFloat()), 0f)
     }
 
     private val highlightFillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = Color.parseColor("#3364B5F6")
+        color = Color.parseColor("#263BE2C0")
     }
 
     init {

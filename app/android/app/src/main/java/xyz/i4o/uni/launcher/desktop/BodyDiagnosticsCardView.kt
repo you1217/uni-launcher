@@ -48,7 +48,7 @@ class BodyDiagnosticsCardView @JvmOverloads constructor(
 
         titleView = TextView(context).apply {
             text = "车身诊断"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -57,10 +57,11 @@ class BodyDiagnosticsCardView @JvmOverloads constructor(
         statusPill = TextView(context).apply {
             text = "全车锁闭"
             setTextColor(Color.parseColor("#3BE2C0"))
-            textSize = 12f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val hp = dpToPx(10f)
-            val vp = dpToPx(4f)
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(3f)
             setPadding(hp, vp, hp, vp)
         }
 
@@ -146,11 +147,12 @@ class BodyDiagnosticsCardView @JvmOverloads constructor(
     private fun createStatusPill(text: String): TextView {
         return TextView(context).apply {
             this.text = text
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 10f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val hp = dpToPx(7f)
-            val vp = dpToPx(3f)
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(4f)
             setPadding(hp, vp, hp, vp)
         }
     }
@@ -180,7 +182,7 @@ class BodyDiagnosticsCardView @JvmOverloads constructor(
         } else {
             statusPill.text = "全车锁闭"
             statusPill.setTextColor(Color.parseColor("#3BE2C0"))
-            statusPill.setBackgroundResource(R.drawable.bg_pill_badge)
+            statusPill.setBackgroundResource(R.drawable.bg_tire_chip)
         }
     }
 
@@ -191,8 +193,8 @@ class BodyDiagnosticsCardView @JvmOverloads constructor(
             pill.setBackgroundResource(R.drawable.bg_pill_badge_warning)
         } else {
             pill.text = "$label 关"
-            pill.setTextColor(Color.WHITE)
-            pill.setBackgroundResource(R.drawable.bg_pill_badge)
+            pill.setTextColor(Color.parseColor("#EFF4F6"))
+            pill.setBackgroundResource(R.drawable.bg_tire_chip)
         }
     }
 

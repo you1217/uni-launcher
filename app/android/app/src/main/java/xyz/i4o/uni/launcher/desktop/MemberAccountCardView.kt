@@ -33,7 +33,7 @@ class MemberAccountCardView @JvmOverloads constructor(
 
         val titleView = TextView(context).apply {
             text = "领克账号"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -42,10 +42,11 @@ class MemberAccountCardView @JvmOverloads constructor(
         val vipPill = TextView(context).apply {
             text = "Co-Club 尊享会员"
             setTextColor(Color.parseColor("#3BE2C0"))
-            textSize = 12f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val hp = dpToPx(10f)
-            val vp = dpToPx(4f)
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(3f)
             setPadding(hp, vp, hp, vp)
         }
 
@@ -64,10 +65,10 @@ class MemberAccountCardView @JvmOverloads constructor(
 
         val avatar = TextView(context).apply {
             text = "🏎️"
-            textSize = 34f
+            textSize = 30f
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_control_circle)
-            val s = dpToPx(56f)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            val s = dpToPx(52f)
             layoutParams = LayoutParams(s, s)
         }
         contentRow.addView(avatar)
@@ -82,14 +83,14 @@ class MemberAccountCardView @JvmOverloads constructor(
 
         val nameView = TextView(context).apply {
             text = "领克车主"
-            setTextColor(Color.WHITE)
-            textSize = 18f
+            setTextColor(Color.parseColor("#EFF4F6"))
+            textSize = 17f
             typeface = Typeface.DEFAULT_BOLD
         }
 
         val levelView = TextView(context).apply {
             text = "Lv.5 星钻俱乐部 · 车辆主账号已绑定"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
             setPadding(0, dpToPx(2f), 0, 0)
         }
@@ -116,7 +117,7 @@ class MemberAccountCardView @JvmOverloads constructor(
 
         val actionView = TextView(context).apply {
             text = "查看权益 ›"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
 

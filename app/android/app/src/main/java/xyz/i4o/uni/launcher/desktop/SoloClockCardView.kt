@@ -63,7 +63,7 @@ class SoloClockCardView @JvmOverloads constructor(
 
         val titleView = TextView(context).apply {
             text = "极简时钟"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -72,10 +72,11 @@ class SoloClockCardView @JvmOverloads constructor(
         secondBadge = TextView(context).apply {
             text = "58s"
             setTextColor(Color.parseColor("#3BE2C0"))
-            textSize = 12f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val hp = dpToPx(10f)
-            val vp = dpToPx(4f)
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(3f)
             setPadding(hp, vp, hp, vp)
         }
 
@@ -94,7 +95,7 @@ class SoloClockCardView @JvmOverloads constructor(
 
         hourView = TextView(context).apply {
             text = "12"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 62f
             typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
             includeFontPadding = false
@@ -111,7 +112,7 @@ class SoloClockCardView @JvmOverloads constructor(
 
         minuteView = TextView(context).apply {
             text = "48"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 62f
             typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
             includeFontPadding = false
@@ -131,14 +132,14 @@ class SoloClockCardView @JvmOverloads constructor(
 
         dateFullView = TextView(context).apply {
             text = "2026年11月05日"
-            setTextColor(Color.parseColor("#B3FFFFFF"))
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 13f
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
         }
 
         weekdayView = TextView(context).apply {
             text = "星期四 · 农历九月廿六"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
         }
 

@@ -152,11 +152,12 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
 
         val closeBtn = TextView(context).apply {
             text = "✕"
-            setTextColor(Color.parseColor("#80FFFFFF"))
-            textSize = 20f
+            setTextColor(Color.parseColor("#8A99AD"))
+            textSize = 16f
             typeface = Typeface.DEFAULT_BOLD
-            val pad = dpToPx(8f)
-            setPadding(pad, pad, pad, pad)
+            gravity = Gravity.CENTER
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
             isClickable = true
             isFocusable = true
             setOnClickListener { dismiss() }
@@ -174,7 +175,7 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
             ).apply {
                 bottomMargin = dpToPx(16f)
             }
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(8f)
             setPadding(p, p, p, p)
         }
@@ -194,28 +195,28 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
         container.addView(carImg)
 
         // 4 Tire Pressure Chips
-        flTireText = createTireBadge("左前", "2.40 bar", FrameLayout.LayoutParams(dpToPx(110f), dpToPx(52f)).apply {
+        flTireText = createTireBadge("左前", "2.40 bar", FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).apply {
             gravity = Gravity.TOP or Gravity.START
             marginStart = dpToPx(16f)
             topMargin = dpToPx(8f)
         })
         container.addView(flTireText)
 
-        frTireText = createTireBadge("右前", "2.40 bar", FrameLayout.LayoutParams(dpToPx(110f), dpToPx(52f)).apply {
+        frTireText = createTireBadge("右前", "2.40 bar", FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).apply {
             gravity = Gravity.TOP or Gravity.END
             marginEnd = dpToPx(16f)
             topMargin = dpToPx(8f)
         })
         container.addView(frTireText)
 
-        rlTireText = createTireBadge("左后", "2.30 bar", FrameLayout.LayoutParams(dpToPx(110f), dpToPx(52f)).apply {
+        rlTireText = createTireBadge("左后", "2.30 bar", FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).apply {
             gravity = Gravity.BOTTOM or Gravity.START
             marginStart = dpToPx(16f)
             bottomMargin = dpToPx(8f)
         })
         container.addView(rlTireText)
 
-        rrTireText = createTireBadge("右后", "2.30 bar", FrameLayout.LayoutParams(dpToPx(110f), dpToPx(52f)).apply {
+        rrTireText = createTireBadge("右后", "2.30 bar", FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).apply {
             gravity = Gravity.BOTTOM or Gravity.END
             marginEnd = dpToPx(16f)
             bottomMargin = dpToPx(8f)
@@ -236,8 +237,8 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
                 gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
                 bottomMargin = dpToPx(6f)
             }
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(10f), dpToPx(2f), dpToPx(10f), dpToPx(2f))
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            setPadding(dpToPx(12f), dpToPx(4f), dpToPx(12f), dpToPx(4f))
         }
         container.addView(tireStatusBanner)
 
@@ -246,14 +247,14 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
 
     private fun createTireBadge(label: String, initialVal: String, lp: FrameLayout.LayoutParams): TextView {
         return TextView(context).apply {
-            text = "$label\n$initialVal"
-            setTextColor(Color.WHITE)
+            text = "$label  $initialVal"
+            setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             layoutParams = lp
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(8f), dpToPx(4f), dpToPx(8f), dpToPx(4f))
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            setPadding(dpToPx(10f), dpToPx(6f), dpToPx(10f), dpToPx(6f))
         }
     }
 
@@ -284,8 +285,8 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
         for ((key, title, fallback) in metricDefs) {
             val cell = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
-                setBackgroundResource(R.drawable.bg_pill_badge)
-                val p = dpToPx(8f)
+                setBackgroundResource(R.drawable.bg_dock_item_glass)
+                val p = dpToPx(10f)
                 setPadding(p, p, p, p)
                 layoutParams = GridLayout.LayoutParams().apply {
                     width = 0
@@ -297,15 +298,15 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
 
             val labelView = TextView(context).apply {
                 text = title
-                setTextColor(Color.parseColor("#80FFFFFF"))
+                setTextColor(Color.parseColor("#8A99AD"))
                 textSize = 11f
             }
             val valueView = TextView(context).apply {
                 text = fallback
-                setTextColor(Color.WHITE)
+                setTextColor(Color.parseColor("#EFF4F6"))
                 textSize = 15f
                 typeface = Typeface.DEFAULT_BOLD
-                setPadding(0, dpToPx(2f), 0, 0)
+                setPadding(0, dpToPx(3f), 0, 0)
             }
             metricValueViews[key] = valueView
 
@@ -331,8 +332,8 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
         fun createStatusPill(title: String, initialVal: String): Pair<LinearLayout, TextView> {
             val container = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
-                setBackgroundResource(R.drawable.bg_pill_badge)
-                val p = dpToPx(8f)
+                setBackgroundResource(R.drawable.bg_dock_item_glass)
+                val p = dpToPx(10f)
                 setPadding(p, p, p, p)
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                     marginStart = dpToPx(4f)
@@ -341,7 +342,7 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
             }
             val lbl = TextView(context).apply {
                 text = title
-                setTextColor(Color.parseColor("#80FFFFFF"))
+                setTextColor(Color.parseColor("#8A99AD"))
                 textSize = 11f
             }
             val v = TextView(context).apply {
@@ -404,8 +405,8 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(14f), dpToPx(8f), dpToPx(14f), dpToPx(8f))
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            setPadding(dpToPx(16f), dpToPx(9f), dpToPx(16f), dpToPx(9f))
             isClickable = true
             isFocusable = true
             setOnClickListener {
@@ -416,11 +417,11 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
 
         val refreshBtn = TextView(context).apply {
             text = "🔄 刷新读取"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(14f), dpToPx(8f), dpToPx(14f), dpToPx(8f))
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            setPadding(dpToPx(16f), dpToPx(9f), dpToPx(16f), dpToPx(9f))
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -447,8 +448,8 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_control_circle_accent)
-            setPadding(dpToPx(16f), dpToPx(8f), dpToPx(16f), dpToPx(8f))
+            setBackgroundResource(R.drawable.bg_dock_pill_accent)
+            setPadding(dpToPx(18f), dpToPx(9f), dpToPx(18f), dpToPx(9f))
             isClickable = true
             isFocusable = true
             setOnClickListener {
@@ -478,10 +479,10 @@ class VehicleReadoutDialog(context: Context) : Dialog(context) {
                 return if (isDemo) fallback else "— bar"
             }
 
-            flTireText.text = "左前\n${readField("pressureFrontLeft", "2.40 bar")}"
-            frTireText.text = "右前\n${readField("pressureFrontRight", "2.40 bar")}"
-            rlTireText.text = "左后\n${readField("pressureRearLeft", "2.30 bar")}"
-            rrTireText.text = "右后\n${readField("pressureRearRight", "2.30 bar")}"
+            flTireText.text = "左前  ${readField("pressureFrontLeft", "2.40 bar")}"
+            frTireText.text = "右前  ${readField("pressureFrontRight", "2.40 bar")}"
+            rlTireText.text = "左后  ${readField("pressureRearLeft", "2.30 bar")}"
+            rrTireText.text = "右后  ${readField("pressureRearRight", "2.30 bar")}"
 
             // 2. Metrics
             val leftT = climate.optDouble("left", 22.0)

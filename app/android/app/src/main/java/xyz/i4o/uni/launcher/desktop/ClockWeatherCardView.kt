@@ -42,14 +42,14 @@ class ClockWeatherCardView @JvmOverloads constructor(
         val clockTime = TextClock(context).apply {
             format12Hour = "HH:mm"
             format24Hour = "HH:mm"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 38f
             typeface = Typeface.DEFAULT_BOLD
         }
         val clockDate = TextClock(context).apply {
             format12Hour = "M月d日 EEEE"
             format24Hour = "M月d日 EEEE"
-            setTextColor(Color.parseColor("#B3FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 13f
             setPadding(0, dpToPx(2f), 0, 0)
         }
@@ -86,13 +86,13 @@ class ClockWeatherCardView @JvmOverloads constructor(
 
         tempView = TextView(context).apply {
             text = "18°C"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 24f
             typeface = Typeface.DEFAULT_BOLD
         }
         conditionView = TextView(context).apply {
             text = "晴"
-            setTextColor(Color.parseColor("#6FD3FF")) // Cyan
+            setTextColor(Color.parseColor("#3BE2C0")) // Mint
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             setPadding(dpToPx(8f), 0, 0, 0)
@@ -103,7 +103,7 @@ class ClockWeatherCardView @JvmOverloads constructor(
 
         highLowView = TextView(context).apply {
             text = "22° / 12°"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
             setPadding(0, dpToPx(2f), 0, dpToPx(4f))
         }
@@ -114,7 +114,7 @@ class ClockWeatherCardView @JvmOverloads constructor(
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 10f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_tire_chip)
             setPadding(dpToPx(8f), dpToPx(2f), dpToPx(8f), dpToPx(2f))
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         }

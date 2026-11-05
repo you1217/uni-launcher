@@ -138,13 +138,13 @@ class EmbeddedNavCardView @JvmOverloads constructor(
         val turnCard = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val pad = dpToPx(10f)
             setPadding(pad, dpToPx(8f), dpToPx(14f), dpToPx(8f))
         }
 
         val turnIconCard = FrameLayout(context).apply {
-            setBackgroundResource(R.drawable.bg_control_circle_accent)
+            setBackgroundResource(R.drawable.bg_dock_pill_accent)
             val s = dpToPx(38f)
             layoutParams = LinearLayout.LayoutParams(s, s)
         }
@@ -168,13 +168,13 @@ class EmbeddedNavCardView @JvmOverloads constructor(
         }
         turnDistanceText = TextView(context).apply {
             text = "600 米后右转"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
         }
         nextRoadText = TextView(context).apply {
             text = "进入城市大道"
-            setTextColor(Color.parseColor("#B3FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
         turnCol.addView(turnDistanceText)
@@ -189,7 +189,7 @@ class EmbeddedNavCardView @JvmOverloads constructor(
         val compassCard = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(8f)
             setPadding(p, p, p, p)
             layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(48f))
@@ -222,7 +222,7 @@ class EmbeddedNavCardView @JvmOverloads constructor(
                 gravity = Gravity.END or Gravity.CENTER_VERTICAL
                 marginEnd = dpToPx(14f)
             }
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(4f)
             setPadding(p, p, p, p)
         }
@@ -253,7 +253,7 @@ class EmbeddedNavCardView @JvmOverloads constructor(
             setPadding(p, p, p, p)
             isClickable = true
             isFocusable = true
-            setBackgroundResource(R.drawable.bg_control_circle_accent)
+            setBackgroundResource(R.drawable.bg_dock_pill_accent)
             setOnClickListener {
                 val ok = navHost?.launchFullscreen() ?: false
                 if (!ok) {
@@ -272,7 +272,7 @@ class EmbeddedNavCardView @JvmOverloads constructor(
         val bottomBar = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val padH = dpToPx(16f)
             val padV = dpToPx(10f)
             setPadding(padH, padV, padH, padV)
@@ -297,7 +297,7 @@ class EmbeddedNavCardView @JvmOverloads constructor(
         }
         destinationText = TextView(context).apply {
             text = "前往 · 城市中心"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
         }

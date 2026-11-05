@@ -39,7 +39,7 @@ class FuelCardView @JvmOverloads constructor(
         }
         titleView = TextView(context).apply {
             text = "燃油与续航"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -57,7 +57,7 @@ class FuelCardView @JvmOverloads constructor(
         // Middle: Large Range Number
         rangeView = TextView(context).apply {
             text = "520 km"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 32f
             typeface = Typeface.DEFAULT_BOLD
             setPadding(0, dpToPx(6f), 0, dpToPx(4f))
@@ -71,13 +71,14 @@ class FuelCardView @JvmOverloads constructor(
             }
             max = 100
             progress = 85
+            progressDrawable = androidx.core.content.ContextCompat.getDrawable(context, R.drawable.progress_bar_mint)
         }
         addView(progressBar)
 
         // Bottom: Status subtext
         subTextView = TextView(context).apply {
             text = "平均油耗 7.2 L/100km | 油量充沛"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
         addView(subTextView)

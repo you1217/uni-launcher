@@ -75,7 +75,7 @@ class AllAppsCenterDialog(
 
         val titleView = TextView(context).apply {
             text = "全部应用"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 20f
             typeface = Typeface.DEFAULT_BOLD
             setPadding(0, 0, dpToPx(16f), 0)
@@ -85,10 +85,10 @@ class AllAppsCenterDialog(
         // Search Input Box
         val searchBox = EditText(context).apply {
             hint = "🔍 搜索车载应用..."
-            setHintTextColor(Color.parseColor("#66FFFFFF"))
-            setTextColor(Color.WHITE)
+            setHintTextColor(Color.parseColor("#4D8A99AD"))
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 13f
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val hp = dpToPx(14f)
             val vp = dpToPx(8f)
             setPadding(hp, vp, hp, vp)
@@ -128,11 +128,11 @@ class AllAppsCenterDialog(
 
         val settingsBtn = TextView(context).apply {
             text = "⚙️ 桌面设置"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val hp = dpToPx(12f)
             val vp = dpToPx(6f)
             setPadding(hp, vp, hp, vp)
@@ -152,12 +152,12 @@ class AllAppsCenterDialog(
         // Close Button
         val closeBtn = TextView(context).apply {
             text = "✕"
-            setTextColor(Color.parseColor("#99FFFFFF"))
-            textSize = 18f
+            setTextColor(Color.parseColor("#8A99AD"))
+            textSize = 16f
+            typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val p = dpToPx(8f)
-            setPadding(p * 2, p, p * 2, p)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
             setOnClickListener { dismiss() }
         }
         header.addView(closeBtn)
@@ -215,11 +215,11 @@ class AllAppsCenterDialog(
     private fun updateTabStyle(tv: TextView, isSelected: Boolean) {
         if (isSelected) {
             tv.setTextColor(Color.parseColor("#3BE2C0"))
-            tv.setBackgroundResource(R.drawable.bg_control_circle_accent)
+            tv.setBackgroundResource(R.drawable.bg_dock_pill_accent)
             tv.typeface = Typeface.DEFAULT_BOLD
         } else {
-            tv.setTextColor(Color.parseColor("#B3FFFFFF"))
-            tv.setBackgroundResource(R.drawable.bg_pill_badge)
+            tv.setTextColor(Color.parseColor("#8A99AD"))
+            tv.setBackgroundResource(R.drawable.bg_dock_item_glass)
             tv.typeface = Typeface.DEFAULT
         }
     }
@@ -412,7 +412,7 @@ class AllAppsCenterDialog(
                 gravity = Gravity.CENTER_HORIZONTAL
                 val pad = dpToPx(8f)
                 setPadding(pad, pad, pad, pad)
-                setBackgroundResource(R.drawable.bg_pill_badge)
+                setBackgroundResource(R.drawable.bg_dock_item_glass)
                 isClickable = true
                 isFocusable = true
                 layoutParams = ViewGroup.MarginLayoutParams(
@@ -434,8 +434,9 @@ class AllAppsCenterDialog(
             }
 
             val labelView = TextView(context).apply {
-                setTextColor(Color.WHITE)
+                setTextColor(Color.parseColor("#EFF4F6"))
                 textSize = 12f
+                typeface = Typeface.DEFAULT_BOLD
                 gravity = Gravity.CENTER
                 maxLines = 1
                 setPadding(0, dpToPx(6f), 0, 0)

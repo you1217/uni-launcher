@@ -36,17 +36,19 @@ class TrafficLightCardView @JvmOverloads constructor(
         titleBadge = TextView(context).apply {
             text = "高德红绿灯"
             setTextColor(Color.parseColor("#3BE2C0")) // Mint
-            textSize = 12f
+            textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(10f), dpToPx(3f), dpToPx(10f), dpToPx(3f))
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(3f)
+            setPadding(hp, vp, hp, vp)
         }
         addView(titleBadge)
 
         // Large countdown numbers
         countdownView = TextView(context).apply {
             text = "--"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 46f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
@@ -57,10 +59,10 @@ class TrafficLightCardView @JvmOverloads constructor(
         // Status pill badge
         laneStatusPill = TextView(context).apply {
             text = "等待路口数据"
-            setTextColor(Color.parseColor("#B3FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_tire_chip)
             setPadding(dpToPx(12f), dpToPx(4f), dpToPx(12f), dpToPx(4f))
             gravity = Gravity.CENTER
         }
@@ -69,7 +71,7 @@ class TrafficLightCardView @JvmOverloads constructor(
         // Bottom hint
         hintView = TextView(context).apply {
             text = "点击启动高德地图"
-            setTextColor(Color.parseColor("#66FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
             gravity = Gravity.CENTER
             setPadding(0, dpToPx(6f), 0, 0)

@@ -54,7 +54,7 @@ class AppGridCardView @JvmOverloads constructor(
 
         titleView = TextView(context).apply {
             text = "常用应用"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -62,7 +62,7 @@ class AppGridCardView @JvmOverloads constructor(
 
         subHintView = TextView(context).apply {
             text = "长按格子可自定义"
-            setTextColor(Color.parseColor("#66FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
 
@@ -94,7 +94,7 @@ class AppGridCardView @JvmOverloads constructor(
                 orientation = VERTICAL
                 gravity = Gravity.CENTER
                 setPadding(dpToPx(4f), dpToPx(6f), dpToPx(4f), dpToPx(6f))
-                setBackgroundResource(R.drawable.bg_pill_badge)
+                setBackgroundResource(R.drawable.bg_dock_item_glass)
                 isClickable = true
                 isFocusable = true
 
@@ -111,7 +111,7 @@ class AppGridCardView @JvmOverloads constructor(
 
                 val name = TextView(context).apply {
                     text = label
-                    setTextColor(Color.parseColor("#E6FFFFFF"))
+                    setTextColor(Color.parseColor("#EFF4F6"))
                     textSize = 10f
                     gravity = Gravity.CENTER
                     setSingleLine(true)

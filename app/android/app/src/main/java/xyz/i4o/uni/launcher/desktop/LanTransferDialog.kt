@@ -77,14 +77,14 @@ class LanTransferDialog(context: Context) : Dialog(context) {
 
         val titleView = TextView(context).apply {
             text = "📲 手机无线快传"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 20f
             typeface = Typeface.DEFAULT_BOLD
         }
 
         val subTitleView = TextView(context).apply {
             text = "免数据线高速传输 · 支持无损音乐、壁纸与 APK 安装包"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 13f
             setPadding(0, dpToPx(3f), 0, 0)
         }
@@ -95,10 +95,13 @@ class LanTransferDialog(context: Context) : Dialog(context) {
 
         val closeBtn = TextView(context).apply {
             text = "✕"
-            setTextColor(Color.parseColor("#99FFFFFF"))
-            textSize = 18f
-            setPadding(dpToPx(12f), dpToPx(6f), dpToPx(12f), dpToPx(6f))
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setTextColor(Color.parseColor("#8A99AD"))
+            textSize = 16f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
+            isClickable = true
             setOnClickListener { dismiss() }
         }
         header.addView(closeBtn)
@@ -108,9 +111,9 @@ class LanTransferDialog(context: Context) : Dialog(context) {
         val switchRow = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(14f)
-            setPadding(p, dpToPx(10f), p, dpToPx(10f))
+            setPadding(p, dpToPx(12f), p, dpToPx(12f))
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -127,14 +130,14 @@ class LanTransferDialog(context: Context) : Dialog(context) {
 
         val switchTitle = TextView(context).apply {
             text = "无线快传传输服务"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
         }
 
         hintTextView = TextView(context).apply {
             text = "手机与车机连接同一 Wi-Fi 或打开手机热点"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
             setPadding(0, dpToPx(2f), 0, 0)
         }
@@ -176,7 +179,7 @@ class LanTransferDialog(context: Context) : Dialog(context) {
             layoutParams = LinearLayout.LayoutParams(dpToPx(260f), LinearLayout.LayoutParams.MATCH_PARENT).apply {
                 marginEnd = dpToPx(16f)
             }
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(16f)
             setPadding(p, p, p, p)
         }
@@ -212,7 +215,7 @@ class LanTransferDialog(context: Context) : Dialog(context) {
 
         val qrTip = TextView(context).apply {
             text = "微信或浏览器扫码直接上传"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
             gravity = Gravity.CENTER
         }
@@ -223,14 +226,14 @@ class LanTransferDialog(context: Context) : Dialog(context) {
         val rightCol = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(12f)
             setPadding(p, p, p, p)
         }
 
         val listHeader = TextView(context).apply {
             text = "📁 已接收文件与传输队列"
-            setTextColor(Color.parseColor("#64B5F6"))
+            setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             setPadding(0, 0, 0, dpToPx(8f))
@@ -255,7 +258,7 @@ class LanTransferDialog(context: Context) : Dialog(context) {
 
         emptyNoticeView = TextView(context).apply {
             text = "暂无文件\n手机扫码后在手机网页选择文件即可高速上传"
-            setTextColor(Color.parseColor("#66FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 13f
             gravity = Gravity.CENTER
             setPadding(0, dpToPx(60f), 0, dpToPx(60f))
@@ -389,8 +392,8 @@ class LanTransferDialog(context: Context) : Dialog(context) {
         val row = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundResource(R.drawable.bg_control_circle)
-            val p = dpToPx(8f)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            val p = dpToPx(10f)
             setPadding(p, p, p, p)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -404,30 +407,32 @@ class LanTransferDialog(context: Context) : Dialog(context) {
             text = tag
             setTextColor(Color.parseColor(tagColor))
             textSize = 10f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(6f), dpToPx(2f), dpToPx(6f), dpToPx(2f))
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            setPadding(dpToPx(8f), dpToPx(3f), dpToPx(8f), dpToPx(3f))
         }
         row.addView(tagView)
 
         val nameCol = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                marginStart = dpToPx(8f)
-                marginEnd = dpToPx(8f)
+                marginStart = dpToPx(10f)
+                marginEnd = dpToPx(10f)
             }
         }
 
         val nameText = TextView(context).apply {
             text = name
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 13f
+            typeface = Typeface.DEFAULT_BOLD
             maxLines = 1
             ellipsize = android.text.TextUtils.TruncateAt.END
         }
 
         val infoText = TextView(context).apply {
             text = info
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
 
@@ -441,8 +446,8 @@ class LanTransferDialog(context: Context) : Dialog(context) {
                 setTextColor(Color.parseColor("#3BE2C0"))
                 textSize = 12f
                 typeface = Typeface.DEFAULT_BOLD
-                setBackgroundResource(R.drawable.bg_pill_badge)
-                setPadding(dpToPx(12f), dpToPx(6f), dpToPx(12f), dpToPx(6f))
+                setBackgroundResource(R.drawable.bg_dock_pill_accent)
+                setPadding(dpToPx(14f), dpToPx(6f), dpToPx(14f), dpToPx(6f))
                 isClickable = true
                 isFocusable = true
                 setOnClickListener { onPrimaryAction?.invoke() }
@@ -458,10 +463,11 @@ class LanTransferDialog(context: Context) : Dialog(context) {
 
         val secondaryBtn = TextView(context).apply {
             text = actionSecondaryLabel
-            setTextColor(Color.parseColor("#FF5252"))
+            setTextColor(Color.parseColor("#FF5E62"))
             textSize = 12f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(10f), dpToPx(6f), dpToPx(10f), dpToPx(6f))
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            setPadding(dpToPx(12f), dpToPx(6f), dpToPx(12f), dpToPx(6f))
             isClickable = true
             isFocusable = true
             setOnClickListener { onSecondaryAction() }

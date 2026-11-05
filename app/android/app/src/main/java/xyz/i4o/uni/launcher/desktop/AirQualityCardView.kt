@@ -43,7 +43,7 @@ class AirQualityCardView @JvmOverloads constructor(
 
         titleView = TextView(context).apply {
             text = "车内空气"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -52,10 +52,11 @@ class AirQualityCardView @JvmOverloads constructor(
         aqiPillView = TextView(context).apply {
             text = "空气优"
             setTextColor(Color.parseColor("#3BE2C0"))
-            textSize = 12f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val hp = dpToPx(10f)
-            val vp = dpToPx(4f)
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(3f)
             setPadding(hp, vp, hp, vp)
         }
 
@@ -80,7 +81,7 @@ class AirQualityCardView @JvmOverloads constructor(
 
         val pmLabel = TextView(context).apply {
             text = "PM2.5 浓度"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
         }
 
@@ -99,7 +100,7 @@ class AirQualityCardView @JvmOverloads constructor(
 
         val unitView = TextView(context).apply {
             text = " μg/m³"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 13f
             setPadding(0, 0, 0, dpToPx(6f))
         }
@@ -119,14 +120,14 @@ class AirQualityCardView @JvmOverloads constructor(
 
         val aqiLabel = TextView(context).apply {
             text = "车外 AQS"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
             gravity = Gravity.END
         }
 
         aqiLevelDescView = TextView(context).apply {
             text = "智能阻隔已开启"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.END
@@ -149,6 +150,7 @@ class AirQualityCardView @JvmOverloads constructor(
             isIndeterminate = false
             max = 100
             progress = 88
+            progressDrawable = androidx.core.content.ContextCompat.getDrawable(context, R.drawable.progress_bar_mint)
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, dpToPx(6f)).apply {
                 bottomMargin = dpToPx(6f)
             }
@@ -161,7 +163,7 @@ class AirQualityCardView @JvmOverloads constructor(
 
         val footerLeft = TextView(context).apply {
             text = "主动座舱清洁系统 (Clean Zone)"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
         }

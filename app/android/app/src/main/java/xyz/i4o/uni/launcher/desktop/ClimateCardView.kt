@@ -48,7 +48,7 @@ class ClimateCardView @JvmOverloads constructor(
         }
         titleView = TextView(context).apply {
             text = "智能空调"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -60,9 +60,10 @@ class ClimateCardView @JvmOverloads constructor(
 
         val detailBtn = TextView(context).apply {
             text = "座椅/更多 ⚙️"
-            setTextColor(Color.parseColor("#64B5F6"))
+            setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 11f
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
             val hp = dpToPx(8f)
             val vp = dpToPx(3f)
             setPadding(hp, vp, hp, vp)
@@ -80,8 +81,8 @@ class ClimateCardView @JvmOverloads constructor(
             setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(10f), dpToPx(3f), dpToPx(10f), dpToPx(3f))
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            setPadding(dpToPx(10f), dpToPx(4f), dpToPx(10f), dpToPx(4f))
             setOnClickListener { sendClimateAction("climate-power", "") }
         }
         header.addView(powerBtn)
@@ -101,7 +102,7 @@ class ClimateCardView @JvmOverloads constructor(
         }
         tempDisplay = TextView(context).apply {
             text = "22.5°C"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 28f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
@@ -164,8 +165,9 @@ class ClimateCardView @JvmOverloads constructor(
         }
         fanDisplay = TextView(context).apply {
             text = "风量: 2 挡"
-            setTextColor(Color.parseColor("#B3FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
+            typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
         }
@@ -185,11 +187,11 @@ class ClimateCardView @JvmOverloads constructor(
     private fun createCircleButton(text: String, onClick: () -> Unit): TextView {
         return TextView(context).apply {
             this.text = text
-            setTextColor(Color.WHITE)
-            textSize = 18f
+            setTextColor(Color.parseColor("#EFF4F6"))
+            textSize = 16f
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_control_circle)
-            val btnSize = dpToPx(36f)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            val btnSize = dpToPx(38f)
             layoutParams = LayoutParams(btnSize, btnSize)
             setOnClickListener { onClick() }
         }
@@ -198,15 +200,15 @@ class ClimateCardView @JvmOverloads constructor(
     private fun createTogglePill(text: String, onClick: () -> Unit): TextView {
         return TextView(context).apply {
             this.text = text
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(10f), dpToPx(4f), dpToPx(10f), dpToPx(4f))
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            setPadding(dpToPx(10f), dpToPx(6f), dpToPx(10f), dpToPx(6f))
             val lp = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f).apply {
-                marginStart = dpToPx(2f)
-                marginEnd = dpToPx(2f)
+                marginStart = dpToPx(3f)
+                marginEnd = dpToPx(3f)
             }
             layoutParams = lp
             setOnClickListener { onClick() }
@@ -225,11 +227,36 @@ class ClimateCardView @JvmOverloads constructor(
     private fun updateUi() {
         tempDisplay.text = "%.1f°C".format(currentTemp)
         fanDisplay.text = "风量: %d 挡".format(currentFan)
-        acToggleBtn.setTextColor(if (isAcOn) Color.parseColor("#3BE2C0") else Color.parseColor("#80FFFFFF"))
-        autoToggleBtn.setTextColor(if (isAutoOn) Color.parseColor("#3BE2C0") else Color.parseColor("#80FFFFFF"))
+        if (isAcOn) {
+            acToggleBtn.setTextColor(Color.parseColor("#3BE2C0"))
+            acToggleBtn.setBackgroundResource(R.drawable.bg_dock_pill_accent)
+        } else {
+            acToggleBtn.setTextColor(Color.parseColor("#8A99AD"))
+            acToggleBtn.setBackgroundResource(R.drawable.bg_dock_item_glass)
+        }
+        if (isAutoOn) {
+            autoToggleBtn.setTextColor(Color.parseColor("#3BE2C0"))
+            autoToggleBtn.setBackgroundResource(R.drawable.bg_dock_pill_accent)
+        } else {
+            autoToggleBtn.setTextColor(Color.parseColor("#8A99AD"))
+            autoToggleBtn.setBackgroundResource(R.drawable.bg_dock_item_glass)
+        }
         recircBtn.text = if (isRecirc) "内循环" else "外循环"
+        if (isRecirc) {
+            recircBtn.setTextColor(Color.parseColor("#3BE2C0"))
+            recircBtn.setBackgroundResource(R.drawable.bg_dock_pill_accent)
+        } else {
+            recircBtn.setTextColor(Color.parseColor("#8A99AD"))
+            recircBtn.setBackgroundResource(R.drawable.bg_dock_item_glass)
+        }
         seatHeatBtn.text = if (seatHeatLevel > 0) "加热 ${seatHeatLevel}挡" else "加热 关"
-        seatHeatBtn.setTextColor(if (seatHeatLevel > 0) Color.parseColor("#FFB057") else Color.parseColor("#80FFFFFF"))
+        if (seatHeatLevel > 0) {
+            seatHeatBtn.setTextColor(Color.parseColor("#FFB057"))
+            seatHeatBtn.setBackgroundResource(R.drawable.bg_dock_pill_accent)
+        } else {
+            seatHeatBtn.setTextColor(Color.parseColor("#8A99AD"))
+            seatHeatBtn.setBackgroundResource(R.drawable.bg_dock_item_glass)
+        }
     }
 
     fun updateFromTelemetry(climate: JSONObject) {

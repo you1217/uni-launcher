@@ -48,13 +48,13 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
 
         val titleView = TextView(context).apply {
             text = "气象与空气质量"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 20f
             typeface = Typeface.DEFAULT_BOLD
         }
         val subTitleView = TextView(context).apply {
             text = "未来 24 小时车载实时气象走势与生活指数"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 13f
             setPadding(0, dpToPx(3f), 0, 0)
         }
@@ -64,12 +64,12 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
 
         val closeBtn = TextView(context).apply {
             text = "✕"
-            setTextColor(Color.parseColor("#99FFFFFF"))
-            textSize = 18f
+            setTextColor(Color.parseColor("#8A99AD"))
+            textSize = 16f
+            typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val p = dpToPx(8f)
-            setPadding(p * 2, p, p * 2, p)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
+            layoutParams = LinearLayout.LayoutParams(dpToPx(38f), dpToPx(38f))
             setOnClickListener { dismiss() }
         }
         header.addView(closeBtn)
@@ -79,7 +79,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
         val overviewCard = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(16f)
             setPadding(p, p, p, p)
             layoutParams = LinearLayout.LayoutParams(
@@ -92,7 +92,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
 
         val tempLarge = TextView(context).apply {
             text = "18°C"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 42f
             typeface = Typeface.DEFAULT_BOLD
             setPadding(0, 0, dpToPx(16f), 0)
@@ -105,13 +105,13 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
         }
         val condText = TextView(context).apply {
             text = "晴朗 · 适宜驾驶出行"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 16f
             typeface = Typeface.DEFAULT_BOLD
         }
         val highLowText = TextView(context).apply {
             text = "最高 22°C / 最低 12°C · 气压稳定"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
             setPadding(0, dpToPx(3f), 0, 0)
         }
@@ -140,7 +140,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
         // 3. 24-Hour Trend Strip
         val trendTitle = TextView(context).apply {
             text = "⏰ 24 小时气温与天气走势"
-            setTextColor(Color.parseColor("#64B5F6"))
+            setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             setPadding(0, dpToPx(18f), 0, dpToPx(8f))
@@ -173,7 +173,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
             val hBox = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
-                setBackgroundResource(R.drawable.bg_pill_badge)
+                setBackgroundResource(R.drawable.bg_dock_item_glass)
                 val p = dpToPx(12f)
                 setPadding(p, p, p, p)
                 layoutParams = LinearLayout.LayoutParams(dpToPx(94f), LinearLayout.LayoutParams.WRAP_CONTENT).apply {
@@ -182,12 +182,12 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
 
                 val tHour = TextView(context).apply {
                     text = hour
-                    setTextColor(Color.parseColor("#99FFFFFF"))
+                    setTextColor(Color.parseColor("#8A99AD"))
                     textSize = 11f
                 }
                 val tCond = TextView(context).apply {
                     text = cond
-                    setTextColor(Color.WHITE)
+                    setTextColor(Color.parseColor("#EFF4F6"))
                     textSize = 12f
                     setPadding(0, dpToPx(4f), 0, dpToPx(4f))
                 }
@@ -209,7 +209,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
         // 4. 3-Day Forecast Strip
         val futureTitle = TextView(context).apply {
             text = "📅 未来 3 天天气预测"
-            setTextColor(Color.parseColor("#64B5F6"))
+            setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             setPadding(0, dpToPx(18f), 0, dpToPx(8f))
@@ -218,7 +218,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
 
         val daysContainer = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            setBackgroundResource(R.drawable.bg_dock_item_glass)
             val p = dpToPx(12f)
             setPadding(p, p, p, p)
         }
@@ -240,7 +240,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
 
                 val dayView = TextView(context).apply {
                     text = day
-                    setTextColor(Color.WHITE)
+                    setTextColor(Color.parseColor("#EFF4F6"))
                     textSize = 13f
                     layoutParams = LinearLayout.LayoutParams(dpToPx(140f), LinearLayout.LayoutParams.WRAP_CONTENT)
                 }
@@ -253,7 +253,7 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
                 }
                 val infoView = TextView(context).apply {
                     text = info
-                    setTextColor(Color.parseColor("#99FFFFFF"))
+                    setTextColor(Color.parseColor("#8A99AD"))
                     textSize = 12f
                     layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
                 }
@@ -274,7 +274,8 @@ class WeatherForecastDialog(context: Context) : Dialog(context) {
             this.text = text
             setTextColor(color)
             textSize = 11f
-            setBackgroundResource(R.drawable.bg_pill_badge)
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
             val hp = dpToPx(8f)
             val vp = dpToPx(4f)
             setPadding(hp, vp, hp, vp)

@@ -40,7 +40,7 @@ class SoloWeatherCardView @JvmOverloads constructor(
 
         cityView = TextView(context).apply {
             text = "📍 杭州市 · 滨江区"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -49,10 +49,11 @@ class SoloWeatherCardView @JvmOverloads constructor(
         conditionPill = TextView(context).apply {
             text = "空气优 24"
             setTextColor(Color.parseColor("#3BE2C0"))
-            textSize = 12f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val hp = dpToPx(10f)
-            val vp = dpToPx(4f)
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(3f)
             setPadding(hp, vp, hp, vp)
         }
 
@@ -82,7 +83,7 @@ class SoloWeatherCardView @JvmOverloads constructor(
 
         tempView = TextView(context).apply {
             text = "18"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 46f
             typeface = Typeface.DEFAULT_BOLD
             includeFontPadding = false
@@ -90,7 +91,7 @@ class SoloWeatherCardView @JvmOverloads constructor(
 
         val degreeUnit = TextView(context).apply {
             text = "°C"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 16f
             setPadding(dpToPx(2f), 0, 0, dpToPx(6f))
         }
@@ -101,7 +102,7 @@ class SoloWeatherCardView @JvmOverloads constructor(
 
         tempRangeView = TextView(context).apply {
             text = "今日 12° ~ 21° · 东北风 2级"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 11f
         }
         tempCol.addView(tempRangeView)
@@ -122,7 +123,7 @@ class SoloWeatherCardView @JvmOverloads constructor(
 
         conditionDescView = TextView(context).apply {
             text = "晴朗"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.END
@@ -152,12 +153,12 @@ class SoloWeatherCardView @JvmOverloads constructor(
             }
             val dView = TextView(context).apply {
                 text = d
-                setTextColor(Color.parseColor("#80FFFFFF"))
+                setTextColor(Color.parseColor("#8A99AD"))
                 textSize = 11f
             }
             val wView = TextView(context).apply {
                 text = w
-                setTextColor(Color.WHITE)
+                setTextColor(Color.parseColor("#EFF4F6"))
                 textSize = 11f
                 typeface = Typeface.DEFAULT_BOLD
                 setPadding(0, dpToPx(2f), 0, 0)

@@ -97,8 +97,8 @@ class MediaCardView @JvmOverloads constructor(
             setTextColor(Color.parseColor("#3BE2C0")) // Nocturne Mint
             textSize = 11f
             typeface = Typeface.DEFAULT_BOLD
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            setPadding(dpToPx(8f), dpToPx(2f), dpToPx(8f), dpToPx(2f))
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            setPadding(dpToPx(8f), dpToPx(3f), dpToPx(8f), dpToPx(3f))
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         }
         infoLayout.addView(sourceBadge)
@@ -106,7 +106,7 @@ class MediaCardView @JvmOverloads constructor(
         // Song Title (Marquee)
         titleView = TextView(context).apply {
             text = "暂无播放"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 17f
             typeface = Typeface.DEFAULT_BOLD
             setSingleLine(true)
@@ -119,7 +119,7 @@ class MediaCardView @JvmOverloads constructor(
         // Artist Name
         artistView = TextView(context).apply {
             text = "点击启动音乐播放器"
-            setTextColor(Color.parseColor("#B3FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
             setSingleLine(true)
             setPadding(0, 0, 0, dpToPx(4f))
@@ -141,7 +141,7 @@ class MediaCardView @JvmOverloads constructor(
         }
         timeView = TextView(context).apply {
             text = "00:00"
-            setTextColor(Color.parseColor("#80FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 10f
         }
         progressRow.addView(progressBar)

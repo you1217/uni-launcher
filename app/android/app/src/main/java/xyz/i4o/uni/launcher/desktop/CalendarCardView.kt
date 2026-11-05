@@ -41,7 +41,7 @@ class CalendarCardView @JvmOverloads constructor(
 
         val titleView = TextView(context).apply {
             text = "日历日程"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 15f
             typeface = Typeface.DEFAULT_BOLD
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
@@ -50,10 +50,11 @@ class CalendarCardView @JvmOverloads constructor(
         val limitPill = TextView(context).apply {
             text = "今日不限行"
             setTextColor(Color.parseColor("#3BE2C0"))
-            textSize = 12f
-            setBackgroundResource(R.drawable.bg_pill_badge)
-            val hp = dpToPx(10f)
-            val vp = dpToPx(4f)
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setBackgroundResource(R.drawable.bg_tire_chip)
+            val hp = dpToPx(8f)
+            val vp = dpToPx(3f)
             setPadding(hp, vp, hp, vp)
         }
 
@@ -73,7 +74,7 @@ class CalendarCardView @JvmOverloads constructor(
         // Big Day Number
         dayNumView = TextView(context).apply {
             text = "05"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 48f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
@@ -90,21 +91,21 @@ class CalendarCardView @JvmOverloads constructor(
 
         dateFullView = TextView(context).apply {
             text = "2026年 11月"
-            setTextColor(Color.WHITE)
+            setTextColor(Color.parseColor("#EFF4F6"))
             textSize = 16f
             typeface = Typeface.DEFAULT_BOLD
         }
 
         weekdayView = TextView(context).apply {
             text = "星期四"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 13f
             setPadding(0, dpToPx(2f), 0, 0)
         }
 
         lunarView = TextView(context).apply {
             text = "农历十月廿六 · 节气: 立冬"
-            setTextColor(Color.parseColor("#B364B5F6"))
+            setTextColor(Color.parseColor("#3BE2C0"))
             textSize = 12f
             setPadding(0, dpToPx(4f), 0, 0)
         }
@@ -119,7 +120,7 @@ class CalendarCardView @JvmOverloads constructor(
         // 3. Travel Tip Bottom Row
         travelNoteView = TextView(context).apply {
             text = "🚗 行车备忘: 全车胎压与油量充沛，适合舒适驾驶"
-            setTextColor(Color.parseColor("#99FFFFFF"))
+            setTextColor(Color.parseColor("#8A99AD"))
             textSize = 12f
             setPadding(0, dpToPx(6f), 0, 0)
         }
