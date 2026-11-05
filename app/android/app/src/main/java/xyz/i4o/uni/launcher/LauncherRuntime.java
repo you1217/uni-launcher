@@ -94,7 +94,9 @@ public final class LauncherRuntime {
         prefs=context.getSharedPreferences("launcher",Context.MODE_PRIVATE);
         // Only initialize a brand-new install; upgrades retain explicit preferences.
         if(prefs.getAll().isEmpty())prefs.edit().putBoolean("globalDockEnabled",true).apply();
-        if(!prefs.contains("demo"))prefs.edit().putBoolean("demo",Build.FINGERPRINT.contains("generic")||Build.MODEL.contains("sdk_gphone")||Build.MODEL.contains("Android SDK")).apply();
+        boolean isAutomotive = context.getPackageManager().hasSystemFeature(android.content.pm.PackageManager.FEATURE_AUTOMOTIVE);
+        boolean isCarHardware = isAutomotive || Build.MODEL.contains("E01") || Build.MODEL.contains("IP753") || Build.BRAND.equalsIgnoreCase("geely") || Build.BRAND.equalsIgnoreCase("lynkco") || context.getPackageManager().getLaunchIntentForPackage("com.ecarx.carsettings") != null;
+        if(!prefs.contains("demo"))prefs.edit().putBoolean("demo",!isCarHardware).apply();
         long afterPrefs=android.os.SystemClock.uptimeMillis();
         apps=new AppRepository(context);catalog=new OfficialCatalog(context);
         long afterRepos=android.os.SystemClock.uptimeMillis();
@@ -157,7 +159,7 @@ public final class LauncherRuntime {
             JSONObject climate=new JSONObject().put("left",simulator.left).put("right",simulator.right).put("fan",simulator.fan).put("power",simulator.power)
                 .put("auto",simulator.auto).put("ac",simulator.ac).put("sync",simulator.sync).put("recirc",simulator.recirc)
                 .put("driverHeat",simulator.driverHeat).put("driverVent",simulator.driverVent).put("passengerHeat",simulator.passengerHeat);
-            JSONObject telemetry=vehicle.snapshot();
+            JSONObject telemetry = prefs.getBoolean("demo", false) ? demoTelemetry() : vehicle.snapshot();
             if(!prefs.getBoolean("demo",false))climate=telemetry.optJSONObject("climate")==null?new JSONObject():telemetry.getJSONObject("climate");
             state.put("systemStatus",systemStatus.snapshot()).put("weather",weather.snapshot()).put("calendar",calendar.snapshot()).put("navigation",navigation.snapshot()).put("integrationPreferences",new JSONObject().put("mediaPackage",prefs.getString("mediaPackage","auto")).put("mapTextureScale",prefs.getBoolean("mapTextureScale",false)).put("navigationCardTitleHidden",prefs.getBoolean("navigationCardTitleHidden",true)).put("autoPlayMusic",prefs.getBoolean("autoPlayMusic",false)));
             state.put("debugBridge",debugBridge.snapshot());
@@ -215,6 +217,35 @@ public final class LauncherRuntime {
                 .put("lyricsSource","demo").put("durationMs",258000).put("positionMs",demoPosition()).put("positionKnown",true)
                 .put("sampledAtMs",System.currentTimeMillis()).put("speed",1);
     }catch(Exception e){android.util.Log.e("UniState","Demo media failed",e);return new JSONObject();}}
+
+    private JSONObject demoTelemetry() {
+        try {
+            JSONObject t = new JSONObject();
+            t.put("connected", true);
+            t.put("writable", true);
+            t.put("reason", "模拟器演示模式 (全量传感器仿真)");
+            JSONObject fields = new JSONObject();
+            fields.put("pressureFrontLeft", new JSONObject().put("valid", true).put("value", 2.40).put("unit", "bar"));
+            fields.put("pressureFrontRight", new JSONObject().put("valid", true).put("value", 2.40).put("unit", "bar"));
+            fields.put("pressureRearLeft", new JSONObject().put("valid", true).put("value", 2.30).put("unit", "bar"));
+            fields.put("pressureRearRight", new JSONObject().put("valid", true).put("value", 2.30).put("unit", "bar"));
+            fields.put("range", new JSONObject().put("valid", true).put("value", 520).put("unit", "km"));
+            fields.put("drivingRange", new JSONObject().put("valid", true).put("value", 520).put("unit", "km"));
+            fields.put("batteryPercent", new JSONObject().put("valid", true).put("value", 85).put("unit", "%"));
+            fields.put("speed", new JSONObject().put("valid", true).put("value", 0).put("unit", "km/h"));
+            fields.put("odometer", new JSONObject().put("valid", true).put("value", 12850).put("unit", "km"));
+            fields.put("pm25", new JSONObject().put("valid", true).put("value", 12).put("unit", "µg/m³"));
+            fields.put("aqi", new JSONObject().put("valid", true).put("value", 18).put("unit", ""));
+            fields.put("driveMode", new JSONObject().put("valid", true).put("value", "舒适模式").put("unit", ""));
+            fields.put("hybridSelected", new JSONObject().put("valid", true).put("value", "智能混动").put("unit", ""));
+            fields.put("energyFlow", new JSONObject().put("valid", true).put("value", "驻车怠速 / 电池备用").put("unit", ""));
+            fields.put("fuelLevel", new JSONObject().put("valid", true).put("value", 85).put("unit", "%"));
+            t.put("fields", fields);
+            return t;
+        } catch (Exception e) {
+            return new JSONObject();
+        }
+    }
     private boolean saveDesignOnMain(String raw){
             if(raw==null||raw.length()>65536)return false;
             try{

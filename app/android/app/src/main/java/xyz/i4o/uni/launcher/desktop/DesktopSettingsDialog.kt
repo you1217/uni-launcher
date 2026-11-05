@@ -18,6 +18,8 @@ import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import org.json.JSONObject
+import xyz.i4o.uni.launcher.LauncherRuntime
 import xyz.i4o.uni.launcher.R
 
 /**
@@ -361,8 +363,8 @@ class DesktopSettingsDialog(
             selectTab("dock")
         }
         val capsuleBtn = createFilterPill("💊 极简悬浮胶囊底栏", !isFullOem) {
-            currentDockStyle = "capsule"
-            onDockStyleChanged("capsule")
+            currentDockStyle = "floating"
+            onDockStyleChanged("floating")
             selectTab("dock")
         }
         dockRow.addView(fullOemBtn)
@@ -575,6 +577,62 @@ class DesktopSettingsDialog(
         infoCol.addView(createInfoLine("运行内存占用", "28.4 MB (极佳性能)"))
         infoCol.addView(createInfoLine("当前帧率", "60.0 FPS (硬件加速)"))
         root.addView(infoCol)
+
+        root.addView(createSectionHeader("🧪 运行环境与传感器仿真", "在电脑模拟器与实车CAN直连之间无缝切换"))
+        val demoCol = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundResource(R.drawable.bg_pill_badge)
+            val p = dpToPx(16f)
+            setPadding(p, p, p, p)
+        }
+
+        val runtime = LauncherRuntime.get(context)
+        val isDemo = runtime.prefs().getBoolean("demo", false)
+
+        val demoSwitchRow = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        val demoTitleCol = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        val demoTitle = TextView(context).apply {
+            text = "模拟器高保真传感器仿真"
+            setTextColor(Color.WHITE)
+            textSize = 14f
+            typeface = Typeface.DEFAULT_BOLD
+        }
+        val demoDesc = TextView(context).apply {
+            text = if (isDemo) "当前处于模拟器演示模式 (提供 520km续航/85%电量/2.4bar胎压/音乐)" else "当前处于官方实车CAN总线直连模式 (读取车身底层硬件)"
+            setTextColor(Color.parseColor("#99FFFFFF"))
+            textSize = 11f
+            setPadding(0, dpToPx(2f), 0, 0)
+        }
+        demoTitleCol.addView(demoTitle)
+        demoTitleCol.addView(demoDesc)
+        demoSwitchRow.addView(demoTitleCol)
+
+        val demoSwitch = android.widget.Switch(context).apply {
+            isChecked = isDemo
+            setOnCheckedChangeListener { _, checked ->
+                try {
+                    runtime.handle(JSONObject().put("action", "demo-mode").put("enabled", checked))
+                    demoDesc.text = if (checked) "当前处于模拟器演示模式 (提供 520km续航/85%电量/2.4bar胎压/音乐)" else "当前处于官方实车CAN总线直连模式 (读取车身底层硬件)"
+                    Toast.makeText(context, if (checked) "已开启模拟器仿真演示模式" else "已切换为实车CAN总线直连模式", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        demoSwitchRow.addView(demoSwitch)
+        demoCol.addView(demoSwitchRow)
+        demoCol.isClickable = true
+        demoCol.isFocusable = true
+        demoCol.setOnClickListener {
+            demoSwitch.isChecked = !demoSwitch.isChecked
+        }
+        root.addView(demoCol)
 
         root.addView(createSectionHeader("🛠️ 维护与导出", "诊断与数据重置"))
         val resetBtn = createActionButton("🔄 恢复桌面出厂初始布局") {

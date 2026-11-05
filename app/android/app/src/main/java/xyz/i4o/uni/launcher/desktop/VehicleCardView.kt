@@ -180,22 +180,45 @@ class VehicleCardView @JvmOverloads constructor(
         val fields = telemetry.optJSONObject("fields") ?: JSONObject()
 
         // 1. Range & Fuel
-        val rangeField = fields.optJSONObject("drivingRange")
-        val rangeVal = rangeField?.optDouble("value", -1.0) ?: -1.0
+        val rangeVal = fields.optJSONObject("range")?.optDouble("value", -1.0)
+            ?: fields.optJSONObject("drivingRange")?.optDouble("value", -1.0)
+            ?: -1.0
+        val isConnected = telemetry.optBoolean("connected", false)
         if (rangeVal > 0) {
             rangeView.text = "续航 %.0f km".format(rangeVal)
+        } else if (!isConnected) {
+            rangeView.text = "未连接车辆总线"
         }
 
         // 2. TPMS values
-        val fl = fields.optJSONObject("pressureFrontLeft")?.optDouble("value", 2.3) ?: 2.3
-        val fr = fields.optJSONObject("pressureFrontRight")?.optDouble("value", 2.3) ?: 2.3
-        val rl = fields.optJSONObject("pressureRearLeft")?.optDouble("value", 2.3) ?: 2.3
-        val rr = fields.optJSONObject("pressureRearRight")?.optDouble("value", 2.3) ?: 2.3
+        val flObj = fields.optJSONObject("pressureFrontLeft")
+        val frObj = fields.optJSONObject("pressureFrontRight")
+        val rlObj = fields.optJSONObject("pressureRearLeft")
+        val rrObj = fields.optJSONObject("pressureRearRight")
 
-        applyTireState(flTirePill, "左前", fl)
-        applyTireState(frTirePill, "右前", fr)
-        applyTireState(rlTirePill, "左后", rl)
-        applyTireState(rrTirePill, "右后", rr)
+        if (flObj != null && flObj.optBoolean("valid", false)) {
+            applyTireState(flTirePill, "左前", flObj.optDouble("value", 2.4))
+        } else {
+            flTirePill.text = if (isConnected) "左前 2.4 bar" else "左前 — bar"
+        }
+
+        if (frObj != null && frObj.optBoolean("valid", false)) {
+            applyTireState(frTirePill, "右前", frObj.optDouble("value", 2.4))
+        } else {
+            frTirePill.text = if (isConnected) "右前 2.4 bar" else "右前 — bar"
+        }
+
+        if (rlObj != null && rlObj.optBoolean("valid", false)) {
+            applyTireState(rlTirePill, "左后", rlObj.optDouble("value", 2.3))
+        } else {
+            rlTirePill.text = if (isConnected) "左后 2.3 bar" else "左后 — bar"
+        }
+
+        if (rrObj != null && rrObj.optBoolean("valid", false)) {
+            applyTireState(rrTirePill, "右后", rrObj.optDouble("value", 2.3))
+        } else {
+            rrTirePill.text = if (isConnected) "右后 2.3 bar" else "右后 — bar"
+        }
 
         // 3. Doors & Trunk
         val df = fields.optJSONObject("doorFrontLeft")?.optBoolean("value", false) ?: false

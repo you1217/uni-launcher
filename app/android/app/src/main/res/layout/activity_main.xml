@@ -60,6 +60,25 @@
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
+            <!-- Demo Environment Pill Indicator -->
+            <TextView
+                android:id="@+id/topDemoIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🧪 模拟器演示环境"
+                android:textColor="#3BE2C0"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_pill_badge"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_marginEnd="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone" />
+
             <!-- Weather Status Pill -->
             <TextView
                 android:id="@+id/topWeatherText"
@@ -107,178 +126,12 @@
             android:layout_height="16dp"
             android:layout_marginBottom="4dp" />
 
-        <!-- Bottom Floating Dock Bar -->
-        <FrameLayout
-            android:id="@+id/dockContainer"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginBottom="12dp"
-            android:layout_marginStart="80dp"
-            android:layout_marginEnd="80dp">
-
-            <LinearLayout
-                android:id="@+id/dockBar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:background="@drawable/bg_dock_capsule"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
-
-                <!-- 1. Navigation -->
-                <LinearLayout
-                    android:id="@+id/dockNavBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_dock_nav" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="导航"
-                        android:textColor="#E6FFFFFF"
-                        android:textSize="11sp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-
-                <!-- 2. Music -->
-                <LinearLayout
-                    android:id="@+id/dockMusicBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_dock_music" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="音乐"
-                        android:textColor="#E6FFFFFF"
-                        android:textSize="11sp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-
-                <!-- 3. 360 Camera -->
-                <LinearLayout
-                    android:id="@+id/dockCameraBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_dock_camera" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="360全景"
-                        android:textColor="#E6FFFFFF"
-                        android:textSize="11sp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-
-                <!-- 4. Car Settings -->
-                <LinearLayout
-                    android:id="@+id/dockCarSettingsBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_dock_car" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="车辆设置"
-                        android:textColor="#E6FFFFFF"
-                        android:textSize="11sp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-
-                <!-- 5. All Apps -->
-                <LinearLayout
-                    android:id="@+id/dockAppsBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_dock_apps" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="全部应用"
-                        android:textColor="#E6FFFFFF"
-                        android:textSize="11sp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-
-                <!-- 6. Desktop Settings -->
-                <LinearLayout
-                    android:id="@+id/dockSettingsBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?android:attr/selectableItemBackground">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_dock_settings" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="桌面设置"
-                        android:textColor="#E6FFFFFF"
-                        android:textSize="11sp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-
-            </LinearLayout>
-        </FrameLayout>
-
-        <!-- Full-Width OEM Dock Bar -->
+        <!-- Unified Complete UNI Bottom Dock (Supports Floating Capsule and Full-Width OEM styles) -->
         <xyz.i4o.uni.launcher.desktop.FullOemDockView
             android:id="@+id/fullOemDockView"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <!-- Bottom Floating Edit Mode Bar -->
         <FrameLayout

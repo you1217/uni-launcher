@@ -1,5 +1,6 @@
 package xyz.i4o.uni.launcher
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,12 +8,12 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import org.json.JSONObject
 import xyz.i4o.uni.launcher.desktop.AllAppsCenterDialog
 import xyz.i4o.uni.launcher.desktop.CardLibraryDialog
-import xyz.i4o.uni.launcher.desktop.ClimateControlBottomSheet
 import xyz.i4o.uni.launcher.desktop.DesktopLayoutManager
 import xyz.i4o.uni.launcher.desktop.DesktopPageIndicator
 import xyz.i4o.uni.launcher.desktop.DesktopSettingsDialog
@@ -24,7 +25,7 @@ import xyz.i4o.uni.launcher.desktop.WorkspacePagerAdapter
  * Native Android View + RenderThread Launcher Activity for Lynk & Co 05.
  *
  * Direct hardware RenderNode rendering, 16ms touch responsiveness,
- * Dual-dock architecture (Floating Capsule / Full OEM Dock),
+ * Complete 1:1 OEM Bottom Dock (Floating & Full-width modes),
  * Steering wheel key intercept, and full modular freedom.
  */
 class MainActivity : AppCompatActivity() {
@@ -33,11 +34,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layoutManager: DesktopLayoutManager
     private lateinit var viewPager: ViewPager2
     private lateinit var workspaceAdapter: WorkspacePagerAdapter
+    private lateinit var topDemoIndicator: TextView
     private lateinit var topWeatherText: TextView
     private lateinit var topSystemStatus: TextView
     private lateinit var wallpaperImageView: ImageView
     private lateinit var desktopPageIndicator: DesktopPageIndicator
-    private lateinit var dockContainer: View
     private lateinit var fullOemDockView: FullOemDockView
     private var currentWallpaper: String = "graphite_night"
     private var currentDockStyle: String = "floating"
@@ -59,7 +60,6 @@ class MainActivity : AppCompatActivity() {
         val savedWallpaper = prefs.getString("wallpaper", "graphite_night") ?: "graphite_night"
         applyWallpaper(savedWallpaper)
 
-        dockContainer = findViewById(R.id.dockContainer)
         fullOemDockView = findViewById(R.id.fullOemDockView)
         currentDockStyle = prefs.getString("dock_style", "floating") ?: "floating"
         applyDockStyle(currentDockStyle)
@@ -73,6 +73,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        topDemoIndicator = findViewById(R.id.topDemoIndicator)
+        topDemoIndicator.setOnClickListener {
+            showDemoEnvironmentDialog()
+        }
+
         topWeatherText = findViewById(R.id.topWeatherText)
         topWeatherText.setOnClickListener {
             WeatherForecastDialog(this).show()
@@ -80,7 +85,6 @@ class MainActivity : AppCompatActivity() {
         topSystemStatus = findViewById(R.id.topSystemStatus)
 
         initWorkspace()
-        initDock()
         initEditBar()
 
         runtime.scheduleBootAutoPlay()
@@ -174,12 +178,11 @@ class MainActivity : AppCompatActivity() {
             .edit()
             .putString("dock_style", style)
             .apply()
+        fullOemDockView.setDockStyle(style)
         if (::workspaceAdapter.isInitialized && workspaceAdapter.isEditMode) {
-            dockContainer.visibility = View.GONE
             fullOemDockView.visibility = View.GONE
         } else {
-            dockContainer.visibility = if (style == "floating") View.VISIBLE else View.GONE
-            fullOemDockView.visibility = if (style == "full_oem") View.VISIBLE else View.GONE
+            fullOemDockView.visibility = View.VISIBLE
         }
     }
 
@@ -213,35 +216,6 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun initDock() {
-        findViewById<View>(R.id.dockNavBtn).setOnClickListener {
-            sendAction("launch-navigation")
-        }
-        findViewById<View>(R.id.dockMusicBtn).setOnClickListener {
-            sendAction("launch-player")
-        }
-        findViewById<View>(R.id.dockCameraBtn).setOnClickListener {
-            runtime.apps().launchOfficialCamera(runtime.vehicle().cameraCapability())
-        }
-        findViewById<View>(R.id.dockCarSettingsBtn).setOnClickListener {
-            runtime.apps().launchPackage("com.ecarx.carsettings")
-        }
-        findViewById<View>(R.id.dockAppsBtn).setOnClickListener {
-            AllAppsCenterDialog(this) { selectedApp ->
-                layoutManager.addCard("shortcuts", viewPager.currentItem)
-            }.show()
-        }
-        findViewById<View>(R.id.dockSettingsBtn).apply {
-            setOnClickListener {
-                showDesktopSettings()
-            }
-            setOnLongClickListener {
-                setEditMode(true)
-                true
-            }
-        }
-    }
-
     private fun applyWallpaper(name: String) {
         currentWallpaper = name
         val resId = when (name) {
@@ -273,7 +247,6 @@ class MainActivity : AppCompatActivity() {
     private fun setEditMode(editing: Boolean) {
         workspaceAdapter.isEditMode = editing
         if (editing) {
-            dockContainer.visibility = View.GONE
             fullOemDockView.visibility = View.GONE
         } else {
             applyDockStyle(currentDockStyle)
@@ -282,6 +255,34 @@ class MainActivity : AppCompatActivity() {
         if (::desktopPageIndicator.isInitialized) {
             desktopPageIndicator.visibility = if (editing || layoutManager.getPageCount() <= 1) View.GONE else View.VISIBLE
         }
+    }
+
+    private fun showDemoEnvironmentDialog() {
+        val isDemo = runtime.prefs().getBoolean("demo", false)
+        val message = buildString {
+            append("【当前环境状态】: ")
+            append(if (isDemo) "🧪 模拟器仿真演示模式\n\n" else "🚗 官方实车CAN直连模式\n\n")
+            append("• 为什么模拟器中有模拟数据？\n")
+            append("本车机系统运行在 PC Android Studio 模拟器中，电脑缺少吉利/领克 05 原车的 CAN 总线与 ECARX 硬件层。\n")
+            append("为了确保 16 种卡片、底部一体 Dock 栏、双区空调调节、胎压监测与媒体动效能够正常预览交互，系统已内置高质量演示数据（520km 续航、85% 电量、2.4 bar 胎压、向海而行音乐与 22.0°C 双区空调）。\n\n")
+            append("• 实车表现：\n")
+            append("当本安装包安装在实车车机时，系统将自动关闭演示模式，直接调用 OfficialCarReader 与车机底层 CAN 硬件直连，呈现 100% 真实车辆传感器数据。")
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("🧪 车机运行环境与数据诊断")
+            .setMessage(message)
+            .setPositiveButton(if (isDemo) "尝试切换为实车直连" else "恢复模拟器演示数据") { _, _ ->
+                val newDemo = !isDemo
+                try {
+                    runtime.handle(JSONObject().put("action", "demo-mode").put("enabled", newDemo))
+                    Toast.makeText(this, if (newDemo) "已切换为模拟器演示模式" else "已切换为实车直连模式", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            .setNegativeButton("知道了", null)
+            .show()
     }
 
     private fun sendAction(action: String, value: String = "") {
@@ -297,6 +298,10 @@ class MainActivity : AppCompatActivity() {
     private fun updateFromRuntime() {
         val snapshot = runtime.snapshot(cursor)
         workspaceAdapter.dispatchSnapshot(snapshot)
+
+        // Update Demo Indicator
+        val isDemo = snapshot.optBoolean("demo", false)
+        topDemoIndicator.visibility = if (isDemo) View.VISIBLE else View.GONE
 
         // Update top bar weather
         val weather = snapshot.optJSONObject("weather")
